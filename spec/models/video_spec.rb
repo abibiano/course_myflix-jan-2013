@@ -16,4 +16,18 @@ describe Video do
 		video.save
 		Video.first.category.should == category_commedies
 	end
+
+	it "is invalid without a title" do
+		Video.new(title: nil).should_not be_valid
+	end
+
+	it "is invalid without a description" do
+		Video.new(title: nil, description: "test description").should_not be_valid
+	end
+
+	it "is invalid without a description" do
+		Video.new(title: "test title", description: nil).should_not be_valid
+	end
+
+	
 end
