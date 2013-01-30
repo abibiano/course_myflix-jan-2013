@@ -3,4 +3,8 @@ class Category < ActiveRecord::Base
 
 	validates :name, presence: true
 
+	def recent_videos
+		videos.order("created_at DESC, id DESC").limit(6)
+	end
+
 end
