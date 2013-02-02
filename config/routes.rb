@@ -3,7 +3,7 @@ Myflix::Application.routes.draw do
   get 'home', to: 'videos#home', as: 'home'
   resources :videos, only: [:show] do
   	collection do
-  		get 'search', to: 'videos#search'
+  		post 'search', to: 'videos#search'
   	end
   end
 

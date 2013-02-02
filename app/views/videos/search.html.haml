@@ -1,5 +1,9 @@
-.videos.row
-  - @videos.each do |video|
-    .video.span2
-      = link_to video_path(video), nil do 
-        %img(src="#{video.small_cover_url}")
+%article.search_result
+  - if @videos.blank?
+    %p No videos found.
+  -else
+    .videos.row
+      - @videos.each do |video|
+        .video.span2
+          = link_to video do
+            %img(src="#{video.small_cover_url}")

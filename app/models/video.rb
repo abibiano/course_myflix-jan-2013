@@ -3,8 +3,12 @@ class Video < ActiveRecord::Base
 
 	validates :title, presence: true
 	validates :description, presence: true
-	
+
 	def self.search_by_title(search_term)
-		where("title LIKE ?", "%#{search_term}%")
+    if search_term.blank?
+      []
+    else
+		  where("title LIKE ?", "%#{search_term}%").order("created_at DESC")
+    end
 	end
 end
