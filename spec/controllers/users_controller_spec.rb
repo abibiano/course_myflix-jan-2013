@@ -15,8 +15,10 @@ describe UsersController do
   describe "POST create" do
     it "creates the user record when the input is valid" do
       post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
-      User.first.email.should == "alex@bibiano.es"
-      User.first.full_name.should == "Alex Bibiano"
+      user = User.first
+      user.email.should == "alex@bibiano.es"
+      user.full_name.should == "Alex Bibiano"
+      user.authenticate("1234").should == user
     end
     it "redirects to home path when input is valid" do
       post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
