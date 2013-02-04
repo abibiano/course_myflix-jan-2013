@@ -29,3 +29,4 @@ Video.create(title: 'South Park', \
 	description: 'South Park is an American animated sitcom created by Trey Parker and Matt Stone for the Comedy Central television network. Intended for mature audiences, the show has become famous for its crude language and dark, surreal humor that lampoons a wide range of topics. The ongoing narrative revolves around four boys-Stan Marsh, Kyle Broflovski, Eric Cartman and Kenny McCormick-and their bizarre adventures in and around the titular Colorado town.', \
 	small_cover_url: '/tmp/south_park.jpg', \
 	category: category_commedies)
+User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")

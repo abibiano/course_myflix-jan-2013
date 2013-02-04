@@ -1,7 +1,7 @@
 %article.search_result
   - if @videos.blank?
     %p No videos found.
-  -else
+  - else
     .videos.row
       - @videos.each do |video|
         .video.span2
