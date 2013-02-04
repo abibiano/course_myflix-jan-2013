@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe VideosController do
+  before :each do
+    user = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex")
+    session[:user_id] = user.id
+  end
   describe "GET show" do
     it "sets the @video variable" do
       batman = Video.create(title: "Batman", description: "BAT!!")
@@ -8,7 +12,8 @@ describe VideosController do
       assigns(:video).should == batman
     end
     it "renders the show template" do
-      get :show
+      batman = Video.create(title: "Batman", description: "BAT!!")
+      get :show, id: batman.id
       response.should render_template :show
     end
   end
