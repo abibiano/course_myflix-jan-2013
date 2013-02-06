@@ -4,6 +4,8 @@ class Video < ActiveRecord::Base
 	validates :title, presence: true
 	validates :description, presence: true
 
+  has_many :reviews
+
 	def self.search_by_title(search_term)
     if search_term.blank?
       []
