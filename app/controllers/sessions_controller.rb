@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
       redirect_to home_path, notice: "You have logged in."
     else
       flash[:error] = "Incorrect username or password."
-      render 'new'
+      render :new
     end
   end
 

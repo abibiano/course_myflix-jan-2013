@@ -1,5 +1,5 @@
 class VideosController < ApplicationController
-  before_filter :require_user, only: [:home, :show, :search]
+  before_filter :require_user
 
 	def home
 		@categories = Category.all

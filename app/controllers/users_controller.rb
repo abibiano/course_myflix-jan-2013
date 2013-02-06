@@ -9,7 +9,7 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       redirect_to home_path, notice: 'User was succesfully created'
     else
-      render "new"
+      render :new
     end
   end
 end

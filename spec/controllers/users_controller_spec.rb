@@ -13,25 +13,29 @@ describe UsersController do
     end
   end
   describe "POST create" do
-    it "creates the user record when the input is valid" do
-      post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
-      user = User.first
-      user.email.should == "alex@bibiano.es"
-      user.full_name.should == "Alex Bibiano"
-      user.authenticate("1234").should == user
-    end
-    it "redirects to home path when input is valid" do
-      post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
-      response.should redirect_to home_path
+    context "with valid input" do
+      it "creates the user" do
+        post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
+        user = User.first
+        user.email.should == "alex@bibiano.es"
+        user.full_name.should == "Alex Bibiano"
+        user.authenticate("1234").should == user
+      end
+      it "redirects to home path" do
+        post :create, user: {email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano"}
+        response.should redirect_to home_path
+      end
     end
 
-    it "does not create a user when the input is invalid" do
-      post :create, user: {full_name: "Alex Bibiano"}
-      User.count.should == 0
-    end
-    it "renders the new template when the input is invalid" do
-      post :create, user: {full_name: "Alex Bibiano"}
-      response.should render_template :new
+    context "with invalid inputs" do
+      it "does not create a user" do
+        post :create, user: {full_name: "Alex Bibiano"}
+        User.count.should == 0
+      end
+      it "renders the new template" do
+        post :create, user: {full_name: "Alex Bibiano"}
+        response.should render_template :new
+      end
     end
   end
 end

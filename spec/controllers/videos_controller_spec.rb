@@ -17,6 +17,7 @@ describe VideosController do
       response.should render_template :show
     end
   end
+
   describe "POST search" do
     it "sets the @videos variable" do
       superman = Video.create(title: "Superman", description: "Clark")
