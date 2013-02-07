@@ -1,3 +1,4 @@
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -6,12 +7,16 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+Review.destroy_all
+Video.destroy_all
 Category.destroy_all
+User.destroy_all
+
 category_commedies = Category.create(name: 'TV Commedies')
 category_dramas = Category.create(name: 'TV Dramas')
 category_reality = Category.create(name: 'Reality TV')
 
-Video.destroy_all
+
 Video.create(title: 'Family Guy', \
 	description: 'Family Guy is an American animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company. The series centers on the Griffins, a dysfunctional family consisting of parents Peter and Lois; their children Meg, Chris, and Stewie; and their anthropomorphic pet dog Brian. The show is set in the fictional city of Quahog, Rhode Island, and exhibits much of its humor in the form of cutaway gags that often lampoon American culture.', \
 	small_cover_url: '/tmp/family_guy.jpg', \
@@ -29,7 +34,7 @@ video_south_park = Video.create(title: 'South Park', \
 	description: 'South Park is an American animated sitcom created by Trey Parker and Matt Stone for the Comedy Central television network. Intended for mature audiences, the show has become famous for its crude language and dark, surreal humor that lampoons a wide range of topics. The ongoing narrative revolves around four boys-Stan Marsh, Kyle Broflovski, Eric Cartman and Kenny McCormick-and their bizarre adventures in and around the titular Colorado town.', \
 	small_cover_url: '/tmp/south_park.jpg', \
 	category: category_commedies)
+
 user_alex = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")
 
-Review.destroy_all
-Review.create(text: "sdfsdf", rating: 2, user: user_alex, video: video_south_park)
+10.times { Review.create(text: Faker::Lorem.paragraph(3), rating: Random.rand(6), user: user_alex, video: video_south_park) }
