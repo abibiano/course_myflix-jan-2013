@@ -37,4 +37,4 @@ video_south_park = Video.create(title: 'South Park', \
 
 user_alex = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")
 
-10.times { Review.create(text: Faker::Lorem.paragraph(3), rating: Random.rand(6), user: user_alex, video: video_south_park) }
+10.times { Review.create(text: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_alex, video: video_south_park) }

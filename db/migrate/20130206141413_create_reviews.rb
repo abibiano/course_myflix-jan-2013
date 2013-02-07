@@ -6,7 +6,7 @@ class CreateReviews < ActiveRecord::Migration
       t.integer :video_id
       t.integer :user_id
       
-      t.timestamp
+      t.timestamps
     end
   end
 end

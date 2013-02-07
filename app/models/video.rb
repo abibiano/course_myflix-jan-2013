@@ -4,7 +4,7 @@ class Video < ActiveRecord::Base
 	validates :title, presence: true
 	validates :description, presence: true
 
-  has_many :reviews
+  has_many :reviews, order: "created_at DESC"
 
 	def self.search_by_title(search_term)
     if search_term.blank?
@@ -13,4 +13,8 @@ class Video < ActiveRecord::Base
 		  where("title LIKE ?", "%#{search_term}%").order("created_at DESC")
     end
 	end
+
+  def average_rating
+    reviews.average(:rating).to_f.round(1)
+  end
 end

@@ -20,21 +20,25 @@ ActiveRecord::Schema.define(:version => 20130206141413) do
   end
 
   create_table "reviews", :force => true do |t|
-    t.text    "text"
-    t.integer "rating"
-    t.integer "video_id"
-    t.integer "user_id"
+    t.text     "text"
+    t.integer  "rating"
+    t.integer  "video_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.string "email"
-    t.string "password_digest"
-    t.string "full_name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "full_name"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "videos", :force => true do |t|
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
     t.string   "small_cover_url"
     t.string   "large_cover_url"
     t.datetime "created_at",      :null => false

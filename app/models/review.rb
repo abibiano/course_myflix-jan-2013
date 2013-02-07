@@ -4,6 +4,7 @@ class Review < ActiveRecord::Base
 
   validates :text, presence: true
   validates :rating, presence: true
+  validates :rating, inclusion: 1..5
   validates :user_id, presence: true
   validates :video_id, presence: true
 end
