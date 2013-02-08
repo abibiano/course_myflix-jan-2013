@@ -1,7 +1,7 @@
 %article.video
   .container
     .row
-      .video_large_cover.span7.offset1       
+      .video_large_cover.span7.offset1
         %img(src="#{@video.large_cover_url}")
       .video_info.span3
         %h3= @video.title
@@ -9,21 +9,13 @@
         %p= @video.description
 %section.reviews.container
   .row
-    .span10.offset1      
-      %form
-        %fieldset
-          %label Rate this video
-          %select(name="")
-            %option(value="5") 5 Stars
-            %option(value="4") 4 Stars
-            %option(value="3") 3 Stars
-            %option(value="2") 2 Stars
-            %option(value="1") 1 Star
-          %label Write Review
-          %textarea.span6(name="" rows="6")
+    .span10.offset1
+      = bootstrap_form_for([@video, @review]) do |f|
+        = f.select :rating, [['5 Stars', 5], ['4 Stars', 4], ['3 Stars', 3], ['2 Stars', 2], ['1 Star', 1]]
+        = f.text_area :content, label: "Write Review", rows: 6, class: 'span6'
         %fieldset.actions.clearfix
-          %input(type="submit" value="Submit" class="btn")
-          %a(href="") Cancel    
+          = f.secondary 'Submit'
+          = button_tag  'Cancel', :type => 'reset', :class => 'btn'
       %header
         %h3 User Reviews (#{@video.reviews.count})
       %ul
@@ -34,4 +26,4 @@
                 %span Rating: #{review.rating} / 5
                 %p by <a href="">#{review.user.full_name}</a>
               .span8
-                %p= review.text
+                %p= review.content
