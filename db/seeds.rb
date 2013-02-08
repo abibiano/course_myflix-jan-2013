@@ -11,6 +11,7 @@ Review.destroy_all
 Video.destroy_all
 Category.destroy_all
 User.destroy_all
+QueueItem.destroy_all
 
 category_commedies = Category.create(name: 'TV Commedies')
 category_dramas = Category.create(name: 'TV Dramas')
@@ -25,7 +26,7 @@ Video.create(title: 'Futurama', \
 	description: 'Futurama is an American animated science fiction sitcom created by Matt Groening and developed by Groening and David X. Cohen for the Fox Broadcasting Company. The series follows the adventures of a late-20th-century New York City pizza delivery boy, Philip J. Fry, who, after being unwittingly cryogenically frozen for one thousand years, finds employment at Planet Express, an interplanetary delivery company in the retro-futuristic 31st century. The series was envisioned by Groening in the late 1990s while working on The Simpsons, later bringing Cohen aboard to develop storylines and characters to pitch the show to Fox.', \
  	small_cover_url: '/tmp/futurama.jpg', \
 	category: category_commedies)
-Video.create(title: 'Monk', \
+video_monk = Video.create(title: 'Monk', \
 	description: 'Monk is an American comedy-drama detective mystery television series created by Andy Breckman and starring Tony Shalhoub as the eponymous character, Adrian Monk. It originally ran from 2002 to 2009 and is primarily a mystery series, although it has dark and comic touches. The series was produced by Mandeville Films and Touchstone Television (although the corporate name changed to ABC Studios in the course of the series, the Touchstone Television logo remained throughout, making Monk the last surviving series to carry it) in association with Universal Television.', \
 	small_cover_url: '/tmp/monk.jpg', \
 	large_cover_url: '/tmp/monk_large.jpg', \
@@ -36,5 +37,13 @@ video_south_park = Video.create(title: 'South Park', \
 	category: category_commedies)
 
 user_alex = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")
+user_chris = User.create(email: "chris@example.com", password: "1234", full_name: "Chris")			
+user_peter = User.create(email: "peter@example.com", password: "1234", full_name: "Peter")						
 
-10.times { Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_alex, video: video_south_park) }
+Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_alex, video: video_south_park)
+Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_chris, video: video_south_park)
+Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_peter, video: video_south_park)
+
+
+user_alex.queue_items.create(video: video_south_park)
+user_alex.queue_items.create(video: video_monk)

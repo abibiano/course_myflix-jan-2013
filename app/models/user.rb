@@ -7,4 +7,6 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: true
 
   has_many :reviews
+  has_many :videos, :through => :queue_items
+  has_many :queue_items
 end

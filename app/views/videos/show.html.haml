@@ -7,6 +7,9 @@
         %h3= @video.title
         %h2 Average Rating: #{@video.average_rating}
         %p= @video.description
+        - if !@video.in_my_queue?(current_user)
+          .actions
+            = link_to "My Queue", queue_items_path(:video_id => @video.id), :method => :post, class: "btn btn-primary"
 %section.reviews.container
   .row
     .span10.offset1

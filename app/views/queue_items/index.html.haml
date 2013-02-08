@@ -1,0 +1,21 @@
+%section.my_queue.container
+  .row
+    .span10.offset1
+      %article
+        %header
+          %h2 My Queue
+        %table.table
+          %thead
+            %tr
+              %th(width="30%") Video Title
+              %th(width="20%") Rating
+              %th(width="15%") Genre
+          %tbody
+            - @queue_items.each do |queue_item|
+              %tr                
+                %td
+                  = link_to queue_item.video.title, video_path(queue_item.video)
+                %td                 
+                  = queue_item.review_rate
+                %td
+                  = link_to queue_item.video.category.name
