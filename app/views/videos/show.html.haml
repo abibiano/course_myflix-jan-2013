@@ -5,7 +5,7 @@
         %img(src="#{@video.large_cover_url}")
       .video_info.span3
         %h3= @video.title
-        %h2 Average Rating: #{@video.average_rating}
+        %span Rating: #{@video.average_rating}/5.0
         %p= @video.description
         - if !@video.in_my_queue?(current_user)
           .actions
@@ -22,7 +22,7 @@
       %header
         %h3 User Reviews (#{@video.reviews.count})
       %ul
-        - @video.reviews.all.each do |review|
+        - @video.reviews.each do |review|
           %article.review
             %li.row
               .span2

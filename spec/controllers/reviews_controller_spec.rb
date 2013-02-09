@@ -18,14 +18,15 @@ describe ReviewsController do
     end
 
     context "with invalid inputs" do
+      let(:video) { video = Fabricate(:video) }
+
       before :each do
-        @user = Fabricate(:user)
-        session[:user_id] = @user.id
-        @video = Fabricate(:video)
-        post :create, review: { rating: 4 }, video_id: @video.id
+        user = Fabricate(:user)
+        session[:user_id] = user.id
+        post :create, review: { rating: 4 }, video_id: video.id
       end
       it "does not create a user" do
-        @video.reviews.count.should == 0
+        video.reviews.count.should == 0
       end
       it "renders the new template" do
         response.should render_template 'videos/show'
