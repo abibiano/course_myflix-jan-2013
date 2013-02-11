@@ -37,4 +37,22 @@ describe QueueItemsController do
       end
     end
   end
+
+
+  describe "DELETE destroy"
+    it "deletes the queue item" do
+      user = Fabricate(:user)
+      session[:user_id] = user.id
+      queue_item1 = Fabricate(:queue_item, user: user)
+      delete :destroy, id: queue_item1.id
+      user.queue_items.should be_empty
+    end
+
+    it "renders the my_queue path" do
+      user = Fabricate(:user)
+      session[:user_id] = user.id
+      queue_item1 = Fabricate(:queue_item, user: user)
+      delete :destroy, id: queue_item1.id
+      response.should redirect_to my_queue_path
+    end
 end 

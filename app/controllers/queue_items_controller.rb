@@ -14,4 +14,10 @@ class QueueItemsController < ApplicationController
       render 'videos/show'
     end
   end
+
+  def destroy
+    QueueItem.find(params[:id]).destroy
+    flash[:success] = "Queue item deleted."
+    redirect_to my_queue_path
+  end
 end
