@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe VideosController do
   context "user is authenticated" do
+    let(:user) { user = Fabricate(:user) }
     before :each do
-      user = Fabricate(:user)
       session[:user_id] = user.id
     end
     describe "GET show" do

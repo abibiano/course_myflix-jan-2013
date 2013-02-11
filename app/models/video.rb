@@ -20,7 +20,4 @@ class Video < ActiveRecord::Base
     reviews.average(:rating).to_f.round(1)
   end
 
-  def in_my_queue?(user)
-    queue_items.exists?(user_id: user.id)
-  end
 end

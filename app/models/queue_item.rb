@@ -5,7 +5,7 @@ class QueueItem < ActiveRecord::Base
   validates :user_id, presence: true
   validates :video_id, presence: true
 
-  def review_rate 
+  def review_rate
     review = video.reviews.where(user_id: user_id).first
     review.nil? ? 5 : review.rating
   end

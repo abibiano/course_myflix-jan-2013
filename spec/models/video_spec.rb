@@ -47,17 +47,4 @@ describe Video do
 		end
 	end
 
-	describe "#in_my_queue?" do
-		let(:video) { Fabricate(:video) }
-		let(:user)	{ Fabricate(:user) }
-
-		it "returns false if video don't are in current user queue" do
-    	video.in_my_queue?(user).should be_false
-		end
-		it "returns true if video don't are in current user queue" do
-			user.queue_items.create(video: video)
-    	video.in_my_queue?(user).should be_true
-    end
-	end
-
 end
