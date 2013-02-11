@@ -3,6 +3,8 @@ require 'spec_helper'
 describe QueueItem do  
   it { should belong_to(:video) }
   it { should belong_to(:user) }
+  it { should validate_presence_of(:position) }
+  it { should validate_uniqueness_of(:position).scoped_to(:user_id) }  
   
 
   describe "#review_rate" do
@@ -23,4 +25,5 @@ describe QueueItem do
       it { should == 1 }
     end  
   end
+
 end

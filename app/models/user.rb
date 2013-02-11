@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   has_many :reviews
   has_many :videos, :through => :queue_items
-  has_many :queue_items
+  has_many :queue_items, order: "position ASC"
 
   def has_video_in_queue?(video)
     queue_items.map(&:video).include?(video)
