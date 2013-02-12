@@ -23,24 +23,24 @@ describe QueueItemsController do
     context "with valid input" do
       it "creates the queue_item" do
         user = Fabricate(:user)
-        session[:user_id] = user.id       
+        session[:user_id] = user.id
         video = Fabricate(:video)
-        post :create, video_id: video.id        
+        post :create, video_id: video.id
         user.queue_items.map(&:video).should == [video]
       end
       it "redirects to my_queue path" do
         user = Fabricate(:user)
-        session[:user_id] = user.id       
+        session[:user_id] = user.id
         video = Fabricate(:video)
-        post :create, video_id: video.id          
+        post :create, video_id: video.id
         response.should redirect_to my_queue_path
       end
 
       it "creates the queue item with the next avalaible position" do
         user = Fabricate(:user)
-        session[:user_id] = user.id       
+        session[:user_id] = user.id
         video = Fabricate(:video)
-        post :create, video_id: video.id        
+        post :create, video_id: video.id
         user.queue_items.first.position == 1
       end
     end
@@ -71,19 +71,15 @@ describe QueueItemsController do
       session[:user_id] = user.id
       queue_item1 = Fabricate(:queue_item, user: user, position: 1)
       put :update_multiple, {}
-      queue_item1.reload
       queue_item1.position.should == 1
-    end     
+    end
     it "updates multiple queue_items position if more than one item is changed" do
       user = Fabricate(:user)
       session[:user_id] = user.id
       queue_item1 = Fabricate(:queue_item, user: user, position: 1)
       queue_item2 = Fabricate(:queue_item, user: user, position: 2)
       put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"3"}, queue_item2.id.to_s=>{"position"=>"2"}}
-      queue_item1.reload
-      queue_item2.reload      
-      queue_item1.position.should == 2
-      queue_item2.position.should == 1    
+      user.queue_items.should == [queue_item2, queue_item1]
     end
     it "updates multiple queue_items and sort recalculate position if any is decimal" do
       user = Fabricate(:user)
@@ -92,12 +88,10 @@ describe QueueItemsController do
       queue_item2 = Fabricate(:queue_item, user: user, position: 2)
       queue_item3 = Fabricate(:queue_item, user: user, position: 3)
       put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"1"}, queue_item2.id.to_s=>{"position"=>"2"}, queue_item3.id.to_s=>{"position"=>"1.5"}}
-      queue_item1.reload
-      queue_item2.reload      
-      queue_item3.reload      
-      queue_item1.position.should == 1
-      queue_item2.position.should == 3    
-      queue_item3.position.should == 2
+      user.queue_items.should == [queue_item1, queue_item3, queue_item2]
+      user.queue_items[0].position.should == 1
+      user.queue_items[1].position.should == 2
+      user.queue_items[2].position.should == 3
     end
     it "redirects to my_queu_path" do
       user = Fabricate(:user)
@@ -107,4 +101,4 @@ describe QueueItemsController do
       response.should redirect_to my_queue_path
     end
   end
-end 
+end

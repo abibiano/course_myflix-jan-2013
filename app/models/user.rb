@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true
   validates :full_name, presence: true
-  validates :password, presence: true
+  validates :password, presence: { on: :create }
   validates :email, uniqueness: true
 
   has_many :reviews
@@ -12,6 +12,13 @@ class User < ActiveRecord::Base
 
   def has_video_in_queue?(video)
     queue_items.map(&:video).include?(video)
+  end
+
+  def reorder_queue_items
+    QueueItem.where("user_id = ?", id).order(:position).each_with_index do |queue_item, index|
+      queue_item.position = index + 1
+      queue_item.save
+    end
   end
 
 end

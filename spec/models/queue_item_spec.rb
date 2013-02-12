@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe QueueItem do  
+describe QueueItem do
   it { should belong_to(:video) }
   it { should belong_to(:user) }
   it { should validate_presence_of(:position) }
-  it { should validate_uniqueness_of(:position).scoped_to(:user_id) }  
-  
+
+
 
   describe "#review_rate" do
     let(:video) { Fabricate(:video) }
@@ -20,10 +20,10 @@ describe QueueItem do
 
     context "one user review" do
       before do
-        review = video.reviews.create(content: "Review 1", rating: 1, user: user, created_at: 1.day.ago)     
+        review = video.reviews.create(content: "Review 1", rating: 1, user: user, created_at: 1.day.ago)
       end
       it { should == 1 }
-    end  
+    end
   end
 
 end
