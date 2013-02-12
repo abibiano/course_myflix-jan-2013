@@ -26,4 +26,21 @@ describe QueueItem do
     end
   end
 
+  describe "#self.update_or_create_review_rate" do
+    let(:video) { Fabricate(:video) }
+    let(:user) { Fabricate(:user) }
+    let(:queue_item) { queue_item = user.queue_items.create(video: video) }
+    it "change the review rating if the review exists" do
+      review = video.reviews.create(content: "Review 1", rating: 1, user: user)
+      QueueItem.update_or_create_review_rate(queue_item, 5)
+      queue_item.review_rate.should == 5
+    end
+
+    it "create a new review with rating if the review dosen't exists" do
+      QueueItem.update_or_create_review_rate(queue_item, 5)
+      queue_item.review_rate.should == 5
+    end
+
+  end
+
 end
