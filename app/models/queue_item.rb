@@ -13,7 +13,7 @@ class QueueItem < ActiveRecord::Base
     review.nil? ? 5 : review.rating
   end
 
-  def self.save_multiple(queue_items, user)
+  def self.save_multiple(queue_items)
     queue_items.each do |queue_item_hash|
       queue_item = QueueItem.find(queue_item_hash[0])
       queue_item.position = queue_item_hash[1][:position]

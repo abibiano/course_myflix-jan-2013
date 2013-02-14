@@ -24,7 +24,7 @@ class QueueItemsController < ApplicationController
 
   def update_multiple
     unless params[:queue_items].nil?
-      if QueueItem.save_multiple(params[:queue_items], current_user)
+      if QueueItem.save_multiple(params[:queue_items])
         current_user.reorder_queue_items
       end
     end
