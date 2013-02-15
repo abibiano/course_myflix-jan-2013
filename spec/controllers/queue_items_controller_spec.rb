@@ -48,20 +48,52 @@ describe QueueItemsController do
 
 
   describe "DELETE destroy" do
-    it "deletes the queue item" do
-      user = Fabricate(:user)
-      session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      delete :destroy, id: queue_item1.id
-      user.queue_items.should be_empty
+    context "authenticated and authorized user" do
+        let(:user) { user = Fabricate(:user) }
+        let(:queue_item1) { queue_item1 = Fabricate(:queue_item, user: user) }
+        let(:queue_item2) { queue_item1 = Fabricate(:queue_item, user: user) }
+      before do
+        session[:user_id] = user.id
+        delete :destroy, id: queue_item1.id
+      end
+
+      it "deletes the queue item" do
+        user.queue_items.should == [queue_item2]
+      end
+
+      it "redirects to my_queue path" do
+        response.should redirect_to my_queue_path
+      end
     end
 
-    it "redirects to my_queue path" do
-      user = Fabricate(:user)
-      session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      delete :destroy, id: queue_item1.id
-      response.should redirect_to my_queue_path
+    context "unauthenticated user" do
+      before do
+        queue_item1 = Fabricate(:queue_item)
+        delete :destroy, id: queue_item1.id
+      end
+      it "does not delete the queue item" do
+        QueueItem.count.should == 1
+      end
+
+      it "redirects the user to the sign in page" do
+        response.should redirect_to sign_in_path
+      end
+    end
+
+    context "unathorized delete" do
+      before do
+        user1 = Fabricate(:user)
+        user2 = Fabricate(:user)
+        session[:user_id] = user2.id
+        queue_item1 = Fabricate(:queue_item, user: user1)
+        delete :destroy, id: queue_item1.id
+      end
+      it "does not delete the queue item" do
+        QueueItem.count.should == 1
+      end
+      it "redirects to the my queue page" do
+        response.should redirect_to my_queue_path
+      end
     end
   end
 
@@ -79,7 +111,7 @@ describe QueueItemsController do
       queue_item1 = Fabricate(:queue_item, user: user, position: 1)
       queue_item2 = Fabricate(:queue_item, user: user, position: 2)
       put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"3"}, queue_item2.id.to_s=>{"position"=>"2"}}
-      user.queue_items.should == [queue_item2, queue_item1]
+      user.queue_items.reload.should == [queue_item2, queue_item1]
     end
     it "updates multiple queue_items and sort recalculate position if any is decimal" do
       user = Fabricate(:user)
@@ -88,10 +120,8 @@ describe QueueItemsController do
       queue_item2 = Fabricate(:queue_item, user: user, position: 2)
       queue_item3 = Fabricate(:queue_item, user: user, position: 3)
       put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"1"}, queue_item2.id.to_s=>{"position"=>"2"}, queue_item3.id.to_s=>{"position"=>"1.5"}}
-      user.queue_items.should == [queue_item1, queue_item3, queue_item2]
-      user.queue_items[0].position.should == 1
-      user.queue_items[1].position.should == 2
-      user.queue_items[2].position.should == 3
+      user.queue_items.reload.should == [queue_item1, queue_item3, queue_item2]
+      user.queue_items.reload.map(&:position)== [1, 2, 3]
     end
     it "redirects to my_queu_path" do
       user = Fabricate(:user)

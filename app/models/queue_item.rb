@@ -14,11 +14,11 @@ class QueueItem < ActiveRecord::Base
   end
 
   def self.save_multiple(queue_items)
-    queue_items.each do |queue_item_hash|
-      queue_item = QueueItem.find(queue_item_hash[0])
-      queue_item.position = queue_item_hash[1][:position]
+    queue_items.each do |key, value|
+      queue_item = QueueItem.find(key)
+      queue_item.position = value[:position]
       queue_item.save
-      update_or_create_review_rate(queue_item, queue_item_hash[1][:review_rate])
+      update_or_create_review_rate(queue_item, value[:review_rate])
     end
   end
 

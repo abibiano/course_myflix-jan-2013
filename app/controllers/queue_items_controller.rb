@@ -17,7 +17,8 @@ class QueueItemsController < ApplicationController
   end
 
   def destroy
-    QueueItem.find(params[:id]).destroy
+    queue_item = QueueItem.find(params[:id])
+    queue_item.destroy if queue_item.user == current_user
     flash[:success] = "Queue item deleted."
     redirect_to my_queue_path
   end
