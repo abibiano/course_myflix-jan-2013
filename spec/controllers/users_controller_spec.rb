@@ -1,37 +1,38 @@
 require 'spec_helper'
 
 describe UsersController do
-  describe "GET new" do
+  describe "GET #new" do
     it "sets the @user variable" do
       get :new
-      assigns(:user).should be_new_record
-      assigns(:user).should be_instance_of(User)
+      expect(assigns(:user)).to be_a_new(User)
     end
     it "renders the new template" do
       get :new
-      response.should render_template :new
+      expect(response).to render_template :new
     end
   end
-  describe "POST create" do
+  describe "POST #create" do
     context "with valid input" do
-      it "creates the user" do       
-        post :create, user: Fabricate.attributes_for(:user)
-        User.count.should == 1
+      it "creates the user" do
+        expect {
+          post :create, user: Fabricate.attributes_for(:user)
+        }.to change(User, :count).by(1)
       end
       it "redirects to home path" do
-        post :create, user: Fabricate.attributes_for(:user)        
-        response.should redirect_to home_path
+        post :create, user: Fabricate.attributes_for(:user)
+        expect(response).to redirect_to home_path
       end
     end
 
     context "with invalid inputs" do
       it "does not create a user" do
-        post :create, user: Fabricate.attributes_for(:user, full_name: nil)        
-        User.count.should == 0
+        expect {
+          post :create, user: Fabricate.attributes_for(:user, full_name: nil)
+        }.to_not change(User, :count)
       end
-      it "renders the new template" do
-        post :create, user: Fabricate.attributes_for(:user, full_name: nil)        
-        response.should render_template :new
+      it "re-renders the new template" do
+        post :create, user: Fabricate.attributes_for(:user, full_name: nil)
+        expect(response).to render_template :new
       end
     end
   end

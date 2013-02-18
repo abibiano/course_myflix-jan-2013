@@ -6,6 +6,6 @@ class Review < ActiveRecord::Base
   validates :rating, presence: true
   validates :rating, inclusion: 1..5
   validates :user_id, presence: true
-  validates :video_id, presence: true
   validates :user_id, :uniqueness => { :scope => :video_id }
+  validates :video_id, presence: true
 end
