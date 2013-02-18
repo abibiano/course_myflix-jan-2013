@@ -131,21 +131,21 @@ describe QueueItemsController do
       end
     end
     describe "POST #create" do
-      video = Fabricate(:video)
+      let(:video) { Fabricate(:video) }
       it_behaves_like "require_sign_in" do
         let(:action) { post :create, video_id: video.id }
       end
     end
     describe "DELETE #destroy" do
-      user = Fabricate(:user)
-      queue_item = Fabricate(:queue_item, user: user)
+      let(:user) { Fabricate(:user) }
+      let(:queue_item) { Fabricate(:queue_item, user: user) }
       it_behaves_like "require_sign_in" do
         let(:action) { delete :destroy, id: queue_item.id }
       end
     end
     describe "PUT #update_multiple" do
-      user = Fabricate(:user)
-      queue_item = Fabricate(:queue_item, user: user, position: 1)
+      let(:user) { Fabricate(:user) }
+      let(:queue_item) { Fabricate(:queue_item, user: user, position: 1) }
       it_behaves_like "require_sign_in" do
         let(:action) { put :update_multiple, queue_items: {queue_item.id => {position: 2}} }
       end

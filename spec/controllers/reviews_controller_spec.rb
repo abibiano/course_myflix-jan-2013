@@ -33,7 +33,7 @@ describe ReviewsController do
   end
   context "user is not authenticated" do
     describe "POST #create" do
-      video = Fabricate(:video)
+      let(:video) { Fabricate(:video) }
       it_behaves_like "require_sign_in" do
         let(:action) { post :create, review: { rating: 4 }, video_id: video.id }
       end

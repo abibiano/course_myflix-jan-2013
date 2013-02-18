@@ -11,7 +11,6 @@ describe SessionsController do
   describe "POST #create" do
     context "valid email and password" do
       let(:user) { Fabricate(:user) }
-
       it "store user id in the session" do
         post :create, {email: user.email, password: user.password}
         expect(session[:user_id]).to eq(user.id)
