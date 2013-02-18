@@ -98,37 +98,59 @@ describe QueueItemsController do
   end
 
   describe "PUT update_multiple" do
-    it "don't changes queue_item position if no position is changed" do
-      user = Fabricate(:user)
+    let(:user) { Fabricate(:user) }
+    let(:queue_item1) { queue_item1 = Fabricate(:queue_item, user: user, position: 1) }
+    let(:queue_item2) { queue_item2 = Fabricate(:queue_item, user: user, position: 2) }
+    let(:queue_item3) { queue_item3 = Fabricate(:queue_item, user: user, position: 3) }
+
+    before do
       session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      put :update_multiple, {}
-      queue_item1.position.should == 1
     end
+
     it "updates multiple queue_items position if more than one item is changed" do
-      user = Fabricate(:user)
-      session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      queue_item2 = Fabricate(:queue_item, user: user, position: 2)
-      put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"3"}, queue_item2.id.to_s=>{"position"=>"2"}}
+      put :update_multiple, queue_items: {queue_item1.id => {position: 2}, queue_item2.id => {position: 1}}
       user.queue_items.reload.should == [queue_item2, queue_item1]
+      user.queue_items.reload.map(&:position).should == [1, 2]
     end
-    it "updates multiple queue_items and sort recalculate position if any is decimal" do
-      user = Fabricate(:user)
-      session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      queue_item2 = Fabricate(:queue_item, user: user, position: 2)
-      queue_item3 = Fabricate(:queue_item, user: user, position: 3)
-      put :update_multiple, queue_items: {queue_item1.id.to_s=>{"position"=>"1"}, queue_item2.id.to_s=>{"position"=>"2"}, queue_item3.id.to_s=>{"position"=>"1.5"}}
-      user.queue_items.reload.should == [queue_item1, queue_item3, queue_item2]
+    it "handles arbitraty position numbers and reorder them" do
+      put :update_multiple, queue_items: {queue_item1.id => {position: 4}, queue_item2.id => {position: 2}, queue_item3.id => {position: 3}}
+      user.queue_items.reload.should == [queue_item2, queue_item3, queue_item1]
+      user.queue_items.reload.map(&:position).should == [1, 2, 3]
+    end
+    it "handle decimal numbers" do
+      put :update_multiple, queue_items: {queue_item1.id => {position: 2.5}, queue_item2.id => {position: 2}, queue_item3.id => {position: 3}}
+      user.queue_items.reload.should == [queue_item2, queue_item1, queue_item3]
       user.queue_items.reload.map(&:position)== [1, 2, 3]
     end
-    it "redirects to my_queu_path" do
-      user = Fabricate(:user)
-      session[:user_id] = user.id
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      put :update_multiple, {}
-      response.should redirect_to my_queue_path
+
+    context "with rating" do
+      context "with no prior rating" do
+        context "no existing review" do
+          it "does not create a review when does not select rating " do
+            put :update_multiple, queue_items: {queue_item1.id => {position: 2.5, rating: ""}, queue_item2.id => {position: 2, rating: ""}, queue_item3.id => {position: 3, rating: ""}}
+            Review.count.should == 0
+          end
+
+          it "redirects to the my queue path" do
+            put :update_multiple, queue_items: {queue_item1.id => {position: 2.5, rating: ""}, queue_item2.id => {position: 2, rating: ""}, queue_item3.id => {position: 3, rating: ""}}
+            response.should redirect_to my_queue_path
+          end
+        end
+
+        context "with existing review" do
+          it "updates and existing review" do
+            review = Fabricate(:review, user: user, video: queue_item1.video, rating: 2)
+            put :update_multiple, queue_items: {queue_item1.id => {position: 2, rating: 3}, queue_item2.id => {position: 2, rating: ""}, queue_item3.id => {position: 3, rating: ""}}
+            review.reload.rating.should == 3
+          end
+
+          it "clears an existing review's rating" do
+            review = Fabricate(:review, user: user, video: queue_item1.video, rating: 2)
+            put :update_multiple, queue_items: {queue_item1.id => {position: 2, rating: ""}, queue_item2.id => {position: 2, rating: ""}, queue_item3.id => {position: 3, rating: ""}}
+            review.reload.rating.should == nil
+          end
+        end
+      end
     end
   end
 end

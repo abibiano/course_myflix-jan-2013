@@ -7,32 +7,21 @@ class QueueItem < ActiveRecord::Base
   validates :video_id, presence: true
   validates :position, presence: true
 
-
-  def review_rate
-    review = video.reviews.where(user_id: user_id).first
-    review.nil? ? 5 : review.rating
+  def rating
+    review.rating if review
   end
 
-  def self.save_multiple(queue_items)
-    queue_items.each do |key, value|
-      queue_item = QueueItem.find(key)
-      queue_item.position = value[:position]
-      queue_item.save
-      update_or_create_review_rate(queue_item, value[:review_rate])
-    end
-  end
-
-  private
-
-  def self.update_or_create_review_rate(queue_item, review_rate)
-    review = queue_item.video.reviews.where(user_id: queue_item.user_id).first
-    if review.nil?
-      review = Review.new(user: queue_item.user, video: queue_item.video, rating: review_rate)
+  def rating=(number)
+    if review
+      number.blank? ? review.rating = nil : review.rating = number
       review.save(validate: false)
     else
-      review.rating = review_rate
-      review.save
+      Review.new(user: user, video: video, rating: number).save(validate: false) unless number.blank?
     end
+  end
+
+  def review
+    @review ||= Review.where(user_id: user.id, video_id: video.id).first
   end
 
 end

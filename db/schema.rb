@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(:version => 20130211112402) do
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.decimal  "position"
+    t.integer  "position"
   end
 
   create_table "reviews", :force => true do |t|

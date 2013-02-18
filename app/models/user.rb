@@ -14,11 +14,4 @@ class User < ActiveRecord::Base
     queue_items.map(&:video).include?(video)
   end
 
-  def reorder_queue_items
-    QueueItem.where("user_id = ?", id).order(:position).each_with_index do |queue_item, index|
-      queue_item.position = index + 1
-      queue_item.save
-    end
-  end
-
 end

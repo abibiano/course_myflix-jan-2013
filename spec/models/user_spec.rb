@@ -23,18 +23,4 @@ describe User do
     end
   end
 
-  describe "#reorder_queue_items" do
-    it "reorders queue items and assign possition starting with 1" do
-      user = Fabricate(:user)
-      queue_item1 = Fabricate(:queue_item, user: user, position: 1)
-      queue_item2 = Fabricate(:queue_item, user: user, position: 2)
-      queue_item3 = Fabricate(:queue_item, user: user, position: 1.5)
-      user.reorder_queue_items
-      user.queue_items.should == [queue_item1, queue_item3, queue_item2]
-      user.queue_items[0].position.should == 1
-      user.queue_items[1].position.should == 2
-      user.queue_items[2].position.should == 3
-    end
-  end
-
 end

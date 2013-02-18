@@ -5,17 +5,35 @@ describe QueueItem do
   it { should belong_to(:user) }
   it { should validate_presence_of(:position) }
 
+  describe "#rating" do
+    context "user has a review on the video" do
+      it "pulls the rating from the user review" do
+        user = Fabricate(:user)
+        video = Fabricate(:video)
+        review = Fabricate(:review, video: video, user: user, rating: 4)
+        queue_item = Fabricate(:queue_item, user: user, video: video)
+        queue_item.rating.should == 4
+      end
+    end
+    context "user does not have review on the video" do
+      it "returns nil" do
+        user = Fabricate(:user)
+        video = Fabricate(:video)
+        queue_item = Fabricate(:queue_item, user: user, video: video)
+        queue_item.rating.should == nil
+      end
+    end
+  end
 
-
-  describe "#review_rate" do
+  describe "#rating" do
     let(:video) { Fabricate(:video) }
     let(:user) { Fabricate(:user) }
     let(:queue_item) { queue_item = user.queue_items.create(video: video) }
 
-    subject { queue_item.review_rate }
+    subject { queue_item.rating }
 
     context "no user review" do
-      it { should == 5 }
+      it { should == nil }
     end
 
     context "one user review" do
@@ -26,19 +44,19 @@ describe QueueItem do
     end
   end
 
-  describe "#self.update_or_create_review_rate" do
-    let(:video) { Fabricate(:video) }
-    let(:user) { Fabricate(:user) }
-    let(:queue_item) { queue_item = user.queue_items.create(video: video) }
-    it "change the review rating if the review exists" do
-      review = video.reviews.create(content: "Review 1", rating: 1, user: user)
-      QueueItem.update_or_create_review_rate(queue_item, 5)
-      queue_item.review_rate.should == 5
+  describe "#rating=" do
+    let(:user) {Fabricate(:user)}
+    let(:video) {Fabricate(:video)}
+    let(:queue_item) {Fabricate(:queue_item, user: user, video: video)}
+    it "sets the rating on the review if the review is present" do
+      review = Fabricate(:review, video: video, user: user, rating: 4)
+      queue_item.rating = 2
+      review.reload.rating.should == 2
     end
 
-    it "create a new review with rating if the review dosen't exists" do
-      QueueItem.update_or_create_review_rate(queue_item, 5)
-      queue_item.review_rate.should == 5
+    it "creates a new review if there is no review for the video" do
+      queue_item.rating = 2
+      user.reviews.first.rating.should == 2
     end
 
   end
