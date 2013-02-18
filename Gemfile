@@ -13,11 +13,12 @@ group :assets do
 end
 
 group :development do
-  gem 'sqlite3'
+
 end
 
 group :test, :development do
-  gem "rspec-rails", "~> 2.0"
+  gem 'sqlite3'
+  gem "rspec-rails"
   gem "fabrication"
   gem "faker"
   gem 'pry'
@@ -30,6 +31,7 @@ end
 
 group :production do
   gem 'pg'
+  gem 'capybara'
 end
 
 gem 'jquery-rails'
