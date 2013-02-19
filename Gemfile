@@ -12,10 +12,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-group :development do
-
-end
-
 group :test, :development do
   gem 'sqlite3'
   gem "rspec-rails"
@@ -27,11 +23,12 @@ end
 
 group :test do
   gem "shoulda-matchers"
+  gem 'capybara'
+  gem "launchy"
 end
 
 group :production do
   gem 'pg'
-  gem 'capybara'
 end
 
 gem 'jquery-rails'

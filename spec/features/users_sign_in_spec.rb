@@ -10,6 +10,6 @@ feature 'User sign in' do
     fill_in "Email Address", with: "alex@bibiano.es"
     fill_in "Password", with: "1234"
     click_button "Sign in"
-    page.should have_content "Alex Bibiano"
+    page.should have_content "Welcome, Alex Bibiano"
   end
 end
