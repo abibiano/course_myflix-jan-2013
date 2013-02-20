@@ -45,5 +45,5 @@ Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), use
 Review.create(content: Faker::Lorem.paragraph(3), rating: Random.rand(1..5), user: user_peter, video: video_south_park)
 
 
-user_alex.queue_items.create(video: video_south_park)
-user_alex.queue_items.create(video: video_monk)
+user_alex.queue_items.create(video: video_south_park, position: 1)
+user_alex.queue_items.create(video: video_monk, position: 2)

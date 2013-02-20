@@ -12,7 +12,7 @@ describe User do
   describe "#has_video_in_queue?" do
     let(:video) { video = Fabricate(:video) }
     let(:user) { user = Fabricate(:user) }
-    
+
     it "returns true if the queue does contain video" do
       user.queue_items.create(video: video)
       user.should have_video_in_queue(video)
@@ -22,4 +22,5 @@ describe User do
       user.should_not have_video_in_queue(video)
     end
   end
+
 end
