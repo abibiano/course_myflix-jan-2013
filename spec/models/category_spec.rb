@@ -8,17 +8,17 @@ describe Category do
 		let(:category) { Fabricate(:category) }
 
 		it "returns an empty array when no videos in category" do
-			category.recent_videos.should == []
+			expect(category.recent_videos).to be_empty
 		end
 		it "returns one video in category" do
 			video = Fabricate(:video, category: category)
-			category.recent_videos.should == [video]
+			expect(category.recent_videos).to match_array([video])
 		end
 		it "returns multiple videos in category in reverse chronically order" do
 			video1 = Fabricate(:video, category: category, created_at: 1.day.ago)
 			video2 = Fabricate(:video, category: category)
 
-			category.recent_videos.should == [video2, video1]
+			expect(category.recent_videos).to eq([video2, video1])
 		end
 
 		it "returns up to 6 when there are more in category" do
@@ -28,8 +28,8 @@ describe Category do
 				Fabricate(:video, category: category, created_at: 1.day.ago)
 			end
 
-			category.recent_videos.size.should == 6
-			category.recent_videos.first.should == last_video
+			expect(category.recent_videos.size).to eq(6)
+			expect(category.recent_videos.first).to eq(last_video)
 		end
 	end
 end

@@ -12,22 +12,19 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-group :development do
-  gem 'sqlite3'
-  gem "better_errors"
-  gem "binding_of_caller"
-end
-
 group :test, :development do
-  gem "rspec-rails", "~> 2.0"
+  gem 'sqlite3'
+  gem "rspec-rails"
   gem "fabrication"
   gem "faker"
   gem 'pry'
-  gem 'pry-nav'  
+  gem 'pry-nav'
 end
 
 group :test do
   gem "shoulda-matchers"
+  gem 'capybara'
+  gem "launchy"
 end
 
 group :production do
