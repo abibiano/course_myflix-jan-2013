@@ -9,6 +9,12 @@ describe User do
   it { should have_many(:queue_items) }
   it { should have_many(:videos).through(:queue_items) }
 
+  it { should have_many(:relationships).with_foreign_key("follower_id").dependent(:destroy) }
+  it { should have_many(:followed_users).through(:relationships) }
+
+  it { should have_many(:reverse_relationships).with_foreign_key("followed_id").class_name("Relationship").dependent(:destroy) }
+  it { should have_many(:followers).through(:reverse_relationships) }
+
   describe "#has_video_in_queue?" do
     let(:video) { Fabricate(:video) }
     let(:user) { Fabricate(:user) }
@@ -22,5 +28,7 @@ describe User do
       user.should_not have_video_in_queue(video)
     end
   end
+
+
 
 end
