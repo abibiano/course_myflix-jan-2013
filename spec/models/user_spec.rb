@@ -29,6 +29,34 @@ describe User do
     end
   end
 
+  describe "following and unfollowing" do
+    let(:user) { Fabricate(:user) }
+    let(:other_user) { Fabricate(:user) }
+
+    before do
+      user.follow!(other_user)
+    end
+
+    it "#follow! other_user" do
+      user.followed_users.should include(other_user)
+    end
+
+    it { other_user.followers.should include(user) }
+
+    it "#unfollow! other_user" do
+      user.unfollow!(other_user)
+      user.followed_users.should_not include(other_user)
+    end
+
+    it "#following?" do
+      user.following?(other_user).should be_true
+      user3 = Fabricate(:user)
+      user.following?(user3).should be_false
+    end
+
+  end
+
+
 
 
 end

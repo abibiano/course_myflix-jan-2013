@@ -22,4 +22,15 @@ class User < ActiveRecord::Base
     queue_items.map(&:video).include?(video)
   end
 
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    relationships.where("followed_id = ?", other_user.id).first.destroy
+  end
+
+  def following?(other_user)
+    relationships.where("followed_id = ?", other_user.id).first
+  end
 end

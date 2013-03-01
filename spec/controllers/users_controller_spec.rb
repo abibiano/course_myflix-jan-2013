@@ -43,11 +43,17 @@ describe UsersController do
         let(:action) { get :show, id: user.id }
       end
     end
+    describe "GET #people" do
+      let(:user) { Fabricate(:user) }
+      it_behaves_like "require_sign_in" do
+        let(:action) { get :people, id: user.id }
+      end
+    end
   end
   context "user is authenticated" do
     before { set_current_user }
     describe "GET #show" do
-      let(:user) { user = Fabricate(:user) }
+      let(:user) { Fabricate(:user) }
       it "sets the @user variable" do
         get :show, id: user.id
         expect(assigns(:user)).to eq user
@@ -57,6 +63,15 @@ describe UsersController do
         expect(response).to render_template :show
       end
     end
+    describe "GET #people" do
+      it "sets the @user variable" do
+        get :people
+        expect(assigns(:user)).to eq current_user
+      end
+      it "renders the people template" do
+        get :people
+        expect(response).to render_template :people
+      end
+    end
   end
-
 end
