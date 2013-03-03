@@ -10,27 +10,29 @@ class User < ActiveRecord::Base
   has_many :videos, through: :queue_items
   has_many :queue_items, order: "position ASC"
 
-  has_many :relationships, foreign_key: "follower_id", dependent: :destroy
-  has_many :followed_users, through: :relationships, source: :followed
+  has_many :followed_relationships, foreign_key: "follower_id",
+                                    class_name: "Relationship",
+                                    dependent: :destroy
+  has_many :followed_users, through: :followed_relationships, source: :followed
 
-  has_many :reverse_relationships, foreign_key: "followed_id",
+  has_many :follower_relationships, foreign_key: "followed_id",
                                    class_name:  "Relationship",
                                    dependent:   :destroy
-  has_many :followers, through: :reverse_relationships
+  has_many :followers, through: :follower_relationships
 
   def has_video_in_queue?(video)
     queue_items.map(&:video).include?(video)
   end
 
   def follow!(other_user)
-    relationships.create!(followed_id: other_user.id)
+    followed_relationships.create!(followed_id: other_user.id) unless other_user == self || following?(other_user)
   end
 
   def unfollow!(other_user)
-    relationships.where("followed_id = ?", other_user.id).first.destroy
+    followed_relationships.where("followed_id = ?", other_user.id).first.destroy
   end
 
   def following?(other_user)
-    relationships.where("followed_id = ?", other_user.id).first
+    followed_relationships.where("followed_id = ?", other_user.id).any?
   end
 end

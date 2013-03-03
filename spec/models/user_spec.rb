@@ -9,11 +9,11 @@ describe User do
   it { should have_many(:queue_items) }
   it { should have_many(:videos).through(:queue_items) }
 
-  it { should have_many(:relationships).with_foreign_key("follower_id").dependent(:destroy) }
-  it { should have_many(:followed_users).through(:relationships) }
+  it { should have_many(:followed_relationships).with_foreign_key("follower_id").dependent(:destroy) }
+  it { should have_many(:followed_users).through(:followed_relationships) }
 
-  it { should have_many(:reverse_relationships).with_foreign_key("followed_id").class_name("Relationship").dependent(:destroy) }
-  it { should have_many(:followers).through(:reverse_relationships) }
+  it { should have_many(:follower_relationships).with_foreign_key("followed_id").class_name("Relationship").dependent(:destroy) }
+  it { should have_many(:followers).through(:follower_relationships) }
 
   describe "#has_video_in_queue?" do
     let(:video) { Fabricate(:video) }
@@ -39,6 +39,16 @@ describe User do
 
     it "#follow! other_user" do
       user.followed_users.should include(other_user)
+    end
+
+    it "#follow! dosen't follow oneself" do
+      user.follow!(user)
+      user.followed_users.should_not include(user)
+    end
+
+    it "#follow! dosen't create duplicate relationships" do
+      user.follow!(other_user)
+      user.followed_users.count.should == 1
     end
 
     it { other_user.followers.should include(user) }
