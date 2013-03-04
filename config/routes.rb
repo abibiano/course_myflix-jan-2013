@@ -13,7 +13,8 @@ Myflix::Application.routes.draw do
   get 'people', to: 'users#people', as: 'people'
   get 'forgot_password', to: 'password_resets#new', as: 'forgot_password'
 
-  resources :password_resets, only: [:create, :edit, :update]
+  get 'password_resets(/:id)', to: 'password_resets#edit', as: 'edit_password_reset'
+  resources :password_resets, only: [:create, :update]
 
   resources :relationships, only: [:create, :destroy]
 
