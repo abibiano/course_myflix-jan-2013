@@ -31,4 +31,8 @@ group :production do
   gem 'pg'
 end
 
+group :development do
+  gem 'letter_opener'
+end
+
 gem 'jquery-rails'
