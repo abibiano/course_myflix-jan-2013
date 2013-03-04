@@ -1,4 +1,6 @@
 Myflix::Application.routes.draw do
+  get "password_resets/new"
+
   root to: 'static_pages#home'
 
   get 'ui(/:action)', controller: 'ui'
@@ -9,7 +11,9 @@ Myflix::Application.routes.draw do
   get 'sign_out', to: 'sessions#destroy', as: 'sign_out'
   get 'my_queue', to: 'queue_items#index', as: 'my_queue'
   get 'people', to: 'users#people', as: 'people'
-  get 'forgot_password', to: 'users#forgot_password', as: 'forgot_password'
+  get 'forgot_password', to: 'password_resets#new', as: 'forgot_password'
+
+  resources :password_resets, only: [:create, :edit, :update]
 
   resources :relationships, only: [:create, :destroy]
 

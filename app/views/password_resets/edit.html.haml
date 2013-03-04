@@ -1,0 +1,11 @@
+%section.reset_password.container
+  .row
+    .span10.offset1
+      = bootstrap_form_for(@user, url: password_reset_path(params[:id])) do |f|
+        %header
+          %h1 Reset Password
+        %fieldset
+          = f.password_field :password
+          = f.password_field :password_confirmation
+        %fieldset.actions.clearfix
+          = f.secondary 'Reset Password'
