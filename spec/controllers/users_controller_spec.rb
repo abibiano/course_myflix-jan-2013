@@ -68,6 +68,17 @@ describe UsersController do
         let(:action) { get :people, id: user.id }
       end
     end
+
+    describe "GET #forgot_password" do
+      it "sets the @user variable" do
+        get :forgot_password
+        expect(assigns(:email)).to be_empty
+      end
+      it "renders the new template" do
+        get :forgot_password
+        expect(response).to render_template :forgot_password
+      end
+    end
   end
   context "user is authenticated" do
     before { set_current_user }

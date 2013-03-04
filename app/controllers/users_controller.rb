@@ -24,4 +24,8 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  def forgot_password
+    @email = ""
+  end
+
 end
