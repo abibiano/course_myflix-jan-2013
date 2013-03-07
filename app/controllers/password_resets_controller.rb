@@ -1,8 +1,8 @@
 class PasswordResetsController < ApplicationController
   def create
-    user = User.find_by_email(params[:email])
-    user.send_password_reset if user
-    render :confirm
+    user = User.where(email: params[:email]).first
+    user.send_password_reset if user.present?
+    redirect_to reset_password_confimation_path
   end
 
   def edit

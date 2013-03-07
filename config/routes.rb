@@ -12,7 +12,7 @@ Myflix::Application.routes.draw do
   get 'my_queue', to: 'queue_items#index', as: 'my_queue'
   get 'people', to: 'users#people', as: 'people'
   get 'forgot_password', to: 'password_resets#new', as: 'forgot_password'
-
+  get 'reset_password_confimation', to: 'password_resets#confirm'
   get 'password_resets(/:id)', to: 'password_resets#edit', as: 'edit_password_reset'
   resources :password_resets, only: [:create, :update]
 

@@ -9,11 +9,31 @@ describe PasswordResetsController do
     end
 
     describe "POST create" do
-      it "sends out an email to the email provided" do
-        post :create, email: 'joe@example.com'
-        ActionMailer::Base.deliveries.should_not be_empty
+      context "with valid email" do
+        after do
+          ActionMailer::Base.deliveries == []
+        end
+
+        it "sends out an email to the email provided" do
+          user = Fabricate(:user, email: 'joe@example.com' )
+          post :create, email: 'joe@example.com'
+          ActionMailer::Base.deliveries.should_not be_empty
+        end
+        it "redirects to password reset confirmation" do
+          post :create, email: 'joe@example.com'
+          response.should redirect_to reset_password_confimation_path
+        end
       end
-      it "redirects to password reset confirmation"
+      context "with email not in system" do
+        it "does not send out emails" do
+          post :create, email: 'joe@example.com'
+          ActionMailer::Base.deliveries.should be_empty
+        end
+        it "redirects to password reset confirmation" do
+          post :create, email: 'joe@example.com'
+          response.should redirect_to reset_password_confimation_path
+        end
+      end
     end
   end
 
