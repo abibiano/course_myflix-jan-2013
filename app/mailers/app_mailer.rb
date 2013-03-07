@@ -4,7 +4,7 @@ class AppMailer < ActionMailer::Base
   def welcome_email(user)
     @user = user
     @url  = "http://myflix.com/login"
-    mail(to: user.email, subject: "Welcom to myFlex")
+    mail(to: user.email, subject: "Welcom to myFlix!")
   end
 
   def password_reset(user)

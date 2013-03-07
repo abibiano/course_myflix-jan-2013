@@ -37,7 +37,7 @@ describe UsersController do
         end
       end
 
-      context "email sending" do
+      context "sends the welcome email" do
         it "sends out the email" do
           post :create, user: Fabricate.attributes_for(:user)
           expect(ActionMailer::Base.deliveries).to_not be_empty
