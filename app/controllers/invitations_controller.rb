@@ -6,6 +6,13 @@ class InvitationsController < ApplicationController
   end
 
   def create
-    redirect_to home_path, notice: 'Invitation was succesfully sent'
+    @invitation = Invitation.new(params[:invitation])
+    @invitation.user = current_user
+    if @invitation.save
+      AppMailer.invitation_email(@invitation).deliver
+      redirect_to home_path, notice: 'Invitation was succesfully sent'
+    else
+      render :new
+    end
   end
 end

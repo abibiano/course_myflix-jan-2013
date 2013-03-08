@@ -38,6 +38,7 @@ describe UsersController do
       end
 
       context "sends the welcome email" do
+        before { reset_email }
         it "sends out the email" do
           post :create, user: Fabricate.attributes_for(:user)
           expect(ActionMailer::Base.deliveries).to_not be_empty
@@ -45,8 +46,7 @@ describe UsersController do
         it "sends to the right recipient" do
           alice = Fabricate.attributes_for(:user)
           post :create, user: alice
-          message = ActionMailer::Base.deliveries.last
-          expect(message.to).to eq [alice[:email]]
+          expect(last_email.to).to eq [alice[:email]]
         end
         it "has the right content" do
           alice = Fabricate.attributes_for(:user, full_name: "Alice")

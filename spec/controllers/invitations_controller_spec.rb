@@ -15,15 +15,42 @@ describe InvitationsController do
       end
     end
 
-    describe "GET #post" do
+    describe "POST #create" do
       context "with valid inputs" do
-        it "creates the invitation"
-        it "sends the invitation to the friend's email"
-        it "redirects to the home path"
+
+        it "creates the invitation" do
+          expect {
+            post :create, invitation: Fabricate.attributes_for(:invitation)
+          }.to change(Invitation, :count).by(1)
+        end
+
+        it "redirects to the home path" do
+          post :create, invitation: Fabricate.attributes_for(:invitation)
+          expect(response).to redirect_to home_path
+        end
+
+        context "sends the invitation email" do
+          before { reset_email }
+          it "sends out the mail" do
+            post :create, invitation: Fabricate.attributes_for(:invitation)
+            expect(ActionMailer::Base.deliveries).to_not be_empty
+          end
+          it "sends to the right recipient"
+          it "has the link with the token to register"
+       end
+
       end
       context "with invalid inputs" do
-        it "re-renders the new template"
-        it "does not create the invitation"
+        it "re-renders the new template" do
+          post :create, invitation: Fabricate.attributes_for(:invitation, friend_email: nil)
+          expect(response).to render_template :new
+        end
+
+        it "does not create the invitation" do
+          expect {
+            post :create, invitation: Fabricate.attributes_for(:invitation, friend_email: nil)
+          }.to_not change(Invitation, :count)
+        end
       end
     end
   end

@@ -1,0 +1,10 @@
+Hello <%= @invitation.friend_full_name %>
+
+<%= @invitation.user.full_name %> has innvited you to myFlix!
+
+Here is the message for you:
+
+<%= @invitation.message %>
+
+Please follow this link to register:
+<%= register_invitation_url(@invitation.token) %>

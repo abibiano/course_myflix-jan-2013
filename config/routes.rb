@@ -6,6 +6,7 @@ Myflix::Application.routes.draw do
   get 'home', to: 'videos#home', as: 'home'
 
   get 'register', to: 'users#new', as: 'register'
+  get 'register_invitation(/:id)', to: 'user#new', as: 'register_invitation'
   get 'people', to: 'users#people', as: 'people'
   resources :users, only: [:create, :show]
 
