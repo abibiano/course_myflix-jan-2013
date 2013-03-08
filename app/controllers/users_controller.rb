@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_filter :require_user, only: [:show, :people]
+
   def new
     @user = User.new
   end
@@ -12,4 +14,13 @@ class UsersController < ApplicationController
       render :new
     end
   end
+
+  def show
+    @user = User.find(params[:id])
+  end
+
+  def people
+    @user = current_user
+  end
+
 end
