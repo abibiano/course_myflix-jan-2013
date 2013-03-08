@@ -34,5 +34,7 @@ Myflix::Application.routes.draw do
     resources :reviews, only: [:create]
   end
 
+  resources :invitations, only: [:new, :create]
+
 end
 
