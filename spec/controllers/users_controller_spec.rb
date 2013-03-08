@@ -36,6 +36,25 @@ describe UsersController do
           expect(response).to render_template :new
         end
       end
+
+      context "sends the welcome email" do
+        it "sends out the email" do
+          post :create, user: Fabricate.attributes_for(:user)
+          expect(ActionMailer::Base.deliveries).to_not be_empty
+        end
+        it "sends to the right recipient" do
+          alice = Fabricate.attributes_for(:user)
+          post :create, user: alice
+          message = ActionMailer::Base.deliveries.last
+          expect(message.to).to eq [alice[:email]]
+        end
+        it "has the right content" do
+          alice = Fabricate.attributes_for(:user, full_name: "Alice")
+          post :create, user: alice
+          message = ActionMailer::Base.deliveries.last
+          expect(message.html_part.body).to include("Alice")
+        end
+      end
     end
     describe "GET #show" do
       let(:user) { Fabricate(:user) }
@@ -49,6 +68,8 @@ describe UsersController do
         let(:action) { get :people, id: user.id }
       end
     end
+
+
   end
   context "user is authenticated" do
     before { set_current_user }
