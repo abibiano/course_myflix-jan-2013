@@ -3,13 +3,32 @@ require 'spec_helper'
 describe UsersController do
   context "user is not authenticated" do
     describe "GET #new" do
-      it "sets the @user variable" do
-        get :new
-        expect(assigns(:user)).to be_a_new(User)
+      context "invitation token is nil" do
+        it "sets the @user variable" do
+          get :new
+          expect(assigns(:user)).to be_a_new(User)
+        end
+        it "renders the new template" do
+          get :new
+          expect(response).to render_template :new
+        end
       end
-      it "renders the new template" do
-        get :new
-        expect(response).to render_template :new
+    end
+    context "invitation token is used" do
+      it "sets email and username is invitation token exists" do
+        alice = Fabricate(:user)
+        invitation = Fabricate(:invitation, user: alice, friend_email: "bob@example.com", friend_full_name: "Bob")
+        get :new, id: invitation.token
+        expect(assigns(:user)).to be_a_new(User)
+        expect(assigns(:user).email).to eq "bob@example.com"
+        expect(assigns(:user).full_name).to eq "Bob"
+      end
+      it "dose not sets email and username if token exists" do
+        alice = Fabricate(:user)
+        get :new, id: "1234"
+        expect(assigns(:user)).to be_a_new(User)
+        expect(assigns(:user).email).to be_nil
+        expect(assigns(:user).full_name).to be_nil
       end
     end
     describe "POST #create" do
@@ -22,6 +41,17 @@ describe UsersController do
         it "redirects to home path" do
           post :create, user: Fabricate.attributes_for(:user)
           expect(response).to redirect_to home_path
+        end
+        it "create relationship if invitation exists" do
+          alice = Fabricate(:user)
+          invitation = Fabricate(:invitation, user: alice, friend_email: "bob@example.com", friend_full_name: "Bob")
+          post :create, user: Fabricate.attributes_for(:user, email: "bob@example.com", full_name: "Bob")
+          expect(User.last.following? alice).to be_true
+        end
+        it "does not create relationship if invitation dosent exists" do
+          expect {
+            post :create, user: Fabricate.attributes_for(:user)
+          }.to_not change(Relationship, :count)
         end
       end
 
