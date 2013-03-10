@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../lib/tokenable'
+
 describe UsersController do
   context "user is not authenticated" do
     describe "GET #new" do
