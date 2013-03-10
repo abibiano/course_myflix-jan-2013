@@ -5,6 +5,7 @@
         %header
           %h1 Reset Password
         %fieldset
+          = f.alert_message "Please fix the errors below."
           = f.password_field :password
           = f.password_field :password_confirmation
         %fieldset.actions.clearfix

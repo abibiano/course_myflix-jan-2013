@@ -29,14 +29,24 @@ describe InvitationsController do
           expect(response).to redirect_to home_path
         end
 
+
         context "sends the invitation email" do
           before { reset_email }
           it "sends out the mail" do
             post :create, invitation: Fabricate.attributes_for(:invitation)
             expect(ActionMailer::Base.deliveries).to_not be_empty
           end
-          it "sends to the right recipient"
-          it "has the link with the token to register"
+          it "sends to the right recipient" do
+            invitation_for_alice = Fabricate.attributes_for(:invitation, friend_email: "alice@example.com", friend_full_name: "Alice")
+            post :create, invitation: invitation_for_alice
+            expect(last_email.to).to eq ["alice@example.com"]
+            expect(last_email.body).to include ("Alice")
+          end
+          it "has the link with the token to register" do
+            invitation_for_alice = Fabricate.attributes_for(:invitation, friend_email: "alice@example.com", friend_full_name: "Alice")
+            post :create, invitation: invitation_for_alice
+            expect(last_email.body).to include ("Alice")
+          end
        end
 
       end
