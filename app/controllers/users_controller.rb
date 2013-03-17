@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       invitation = Invitation.where(friend_email: @user.email).first
-      @user.follow! invitation.user if invitation
+      handle_invitation(invitation) if invitation
       AppMailer.welcome_email(@user).deliver
       session[:user_id] = @user.id
       redirect_to home_path, notice: 'User was succesfully created'
@@ -22,6 +22,7 @@ class UsersController < ApplicationController
       render :new
     end
   end
+
 
   def show
     @user = User.find(params[:id])
@@ -31,5 +32,12 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  private
+
+  def handle_invitation(invitation)
+    @user.follow! invitation.user
+    invitation.user.follow! @user
+    invitation.update_attribute(:token, nil)
+  end
 
 end

@@ -47,6 +47,7 @@ describe UsersController do
           invitation = Fabricate(:invitation, user: alice, friend_email: "bob@example.com", friend_full_name: "Bob")
           post :create, user: Fabricate.attributes_for(:user, email: "bob@example.com", full_name: "Bob")
           expect(User.last.following? alice).to be_true
+          expect(alice.following? User.last).to be_true
         end
         it "does not create relationship if invitation dosent exists" do
           expect {
