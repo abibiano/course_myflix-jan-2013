@@ -7,6 +7,8 @@ gem 'bcrypt-ruby'
 gem 'bootstrap_form'
 gem 'sidekiq'
 gem 'unicorn'
+gem "fabrication"
+gem "faker"
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
@@ -17,8 +19,6 @@ end
 group :test, :development do
   gem 'sqlite3'
   gem "rspec-rails"
-  gem "fabrication"
-  gem "faker"
   gem 'pry'
   gem 'pry-nav'
 end
