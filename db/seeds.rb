@@ -51,8 +51,8 @@ all_users << user_alex << user_chris << user_peter
 user_alex.queue_items.create(video: video_south_park, position: 1)
 user_alex.queue_items.create(video: video_monk, position: 2)
 
-user_alex.relationships.create(followed_id: user_peter.id)
-user_alex.relationships.create(followed_id: user_chris.id)
+user_alex.follower_relationships.create(followed_id: user_peter.id)
+user_alex.follower_relationships.create(followed_id: user_chris.id)
 
-user_peter.relationships.create(followed_id: user_chris.id)
-user_peter.relationships.create(followed_id: user_alex.id)
+user_peter.follower_relationships.create(followed_id: user_chris.id)
+user_peter.follower_relationships.create(followed_id: user_alex.id)
