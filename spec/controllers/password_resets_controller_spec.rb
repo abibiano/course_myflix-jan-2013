@@ -38,6 +38,9 @@ describe PasswordResetsController do
       end
     end
     context "with email not in system" do
+      after do
+        ActionMailer::Base.deliveries = []
+      end
       it "does not send out emails" do
         post :create, email: 'joe@example.com'
         ActionMailer::Base.deliveries.should be_empty
