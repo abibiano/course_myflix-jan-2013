@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
 gem 'rails'
 gem 'haml-rails'
 gem 'bootstrap-sass'
