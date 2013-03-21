@@ -37,6 +37,7 @@ video_south_park = Video.create(title: 'South Park', \
 	small_cover_url: '/tmp/south_park.jpg', \
 	category: category_commedies)
 
+user_admin = User.create(email: "admin@example.com", password: "admin", full_name: "Admin User", admin: true)
 user_alex = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")
 user_chris = User.create(email: "chris@example.com", password: "1234", full_name: "Chris")
 user_peter = User.create(email: "peter@example.com", password: "1234", full_name: "Peter")
