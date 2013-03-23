@@ -1,6 +1,4 @@
-class ReviewsController < ApplicationController
-  before_filter :require_user
-
+class ReviewsController < AuthenticatedController
   def create
     @review = Review.new(params[:review])
     @review.video = Video.find(params[:video_id])

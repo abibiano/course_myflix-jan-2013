@@ -61,11 +61,11 @@ ActiveRecord::Schema.define(:version => 20130321130433) do
     t.string   "email"
     t.string   "password_digest"
     t.string   "full_name"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
-    t.boolean  "admin"
+    t.boolean  "admin",                  :default => false
   end
 
   create_table "videos", :force => true do |t|
