@@ -13,11 +13,24 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      invitation = Invitation.where(friend_email: @user.email).first
-      handle_invitation(invitation) if invitation
-      AppMailer.delay.welcome_email(@user)
-      session[:user_id] = @user.id
-      redirect_to home_path, notice: 'User was succesfully created'
+      Stripe.api_key = "sk_test_7Ct0DIec7KS2N5A6V8fS42OT"
+      token = params[:stripeToken]
+      begin
+        charge = Stripe::Charge.create(
+          :amount => 999,
+          :currency => "usd",
+          :card => token,
+          :description => @user.email
+        )
+        invitation = Invitation.where(friend_email: @user.email).first
+        handle_invitation(invitation) if invitation
+        AppMailer.delay.welcome_email(@user)
+        session[:user_id] = @user.id
+        redirect_to home_path, notice: 'User was succesfully created'
+      rescue Stripe::CardError => e
+        flash[:error] = e.message
+        render :new
+      end
     else
       render :new
     end

@@ -11,3 +11,4 @@
           = f.text_field :full_name
           = f.actions do
             = f.secondary 'Sign Up'
+            %script(src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button" data-key="pk_test_uVxGWZ8GZkpNQKOt8WqRzuxM" data-amount="999" data-name="MyFlix" data-description="1 month suscription ($9.99)")

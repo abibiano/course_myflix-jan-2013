@@ -13,6 +13,7 @@ gem "faker"
 gem 'carrierwave'
 gem "mini_magick"
 gem "fog", "~> 1.3.1"
+gem 'stripe'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
