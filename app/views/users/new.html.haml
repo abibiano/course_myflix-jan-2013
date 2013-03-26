@@ -1,7 +1,7 @@
 %section.register.container
   .row
     .span10.offset1
-      = bootstrap_form_for(@user, html: { class: 'form-horizontal' }) do |f|
+      = bootstrap_form_for(@user, html: { id: 'payment-form', class: 'form-horizontal' }) do |f|
         %header
           %h1 Register
         %fieldset
@@ -9,6 +9,20 @@
           = f.text_field :email
           = f.password_field :password
           = f.text_field :full_name
+        %fieldset.credit_card
+          %span.payment-errors
+          .control-group
+            %label.control-label Credit Card Number
+            .controls
+              %input.span3.card-number(type="text")
+          .control-group
+            %label.control-label Security Code
+            .controls
+              %input.span3.card-cvc(type="text")
+          .control-group
+            %label.control-label Expiration
+            .controls
+              = select_month(Date.today, {add_month_numbers: true}, name: nil, class: 'span2 card-expiry-month')
+              = select_year(Date.today.year, {start_year: Date.today.year, end_year: Date.today.year + 4}, name: nil, class: 'span1 card-expiry-year')
           = f.actions do
-            = f.secondary 'Sign Up'
-            %script(src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button" data-key="pk_test_uVxGWZ8GZkpNQKOt8WqRzuxM" data-amount="999" data-name="MyFlix" data-description="1 month suscription ($9.99)")
+            = f.submit 'Sign Up', class: 'btn btn-primary payment_submit'
