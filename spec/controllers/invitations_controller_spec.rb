@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe InvitationsController do
   context "user is authenticated" do
-    before { set_current_user }
+    before { set_current_user(Fabricate(:user))}
 
     describe "GET #new" do
       it "sets the @invitation variable" do

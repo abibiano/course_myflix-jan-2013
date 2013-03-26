@@ -103,7 +103,7 @@ describe UsersController do
 
   end
   context "user is authenticated" do
-    before { set_current_user }
+    before { set_current_user(Fabricate(:user)) }
     describe "GET #show" do
       let(:user) { Fabricate(:user) }
       it "sets the @user variable" do

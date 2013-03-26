@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ReviewsController do
   context "user is authenticated" do
-    before { set_current_user }
+    before { set_current_user(Fabricate(:user)) }
     describe "POST #create" do
       context "with valid input" do
         let(:video) { Fabricate(:video) }
