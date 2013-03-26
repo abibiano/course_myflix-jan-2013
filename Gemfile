@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.0.0'
-gem 'rails'
+gem 'rails', '3.2.12'
 gem 'haml-rails'
 gem 'bootstrap-sass'
 gem 'bcrypt-ruby'
@@ -22,13 +22,14 @@ end
 
 group :test, :development do
   gem 'sqlite3'
-  gem "rspec-rails"
+  gem 'rspec-core', '2.13.0'
+  gem "rspec-rails", '2.13.0'
   gem 'pry'
   gem 'pry-nav'
 end
 
 group :test do
-  gem "shoulda-matchers"
+  gem "shoulda-matchers", "1.4.2"
   gem 'capybara'
   gem 'capybara-email'
   gem "launchy"
