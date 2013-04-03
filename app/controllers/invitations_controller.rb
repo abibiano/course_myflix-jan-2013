@@ -1,6 +1,4 @@
-class InvitationsController < ApplicationController
-  before_filter :require_user, only: [:new, :create]
-
+class InvitationsController < AuthenticatedController
   def new
     @invitation = Invitation.new
   end

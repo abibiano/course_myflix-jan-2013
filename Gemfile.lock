@@ -31,7 +31,7 @@ GEM
     addressable (2.3.3)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
-    bootstrap-sass (2.3.0.1)
+    bootstrap-sass (2.3.1.0)
       sass (~> 3.2)
     bootstrap_form (0.3.2)
     bourne (1.1.2)
@@ -47,6 +47,12 @@ GEM
     capybara-email (2.0.2)
       capybara (~> 2.0.0)
       mail
+    carrierwave (0.8.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+    celluloid (0.12.4)
+      facter (>= 1.6.12)
+      timers (>= 1.0.0)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.0.9)
@@ -56,16 +62,30 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.5.0)
+    coffee-script-source (1.6.2)
+    connection_pool (1.0.0)
     diff-lcs (1.2.1)
     erubis (2.7.0)
+    excon (0.13.4)
     execjs (1.4.0)
       multi_json (~> 1.0)
-    fabrication (2.6.1)
+    fabrication (2.6.3)
+    facter (1.6.18)
     faker (1.1.2)
       i18n (~> 0.5)
-    ffi (1.4.0)
-    haml (4.0.0)
+    ffi (1.6.0)
+    fog (1.3.1)
+      builder
+      excon (~> 0.13.0)
+      formatador (~> 0.2.0)
+      mime-types
+      multi_json (~> 1.0)
+      net-scp (~> 1.0.4)
+      net-ssh (>= 2.1.3)
+      nokogiri (~> 1.5.0)
+      ruby-hmac
+    formatador (0.2.4)
+    haml (4.0.1)
       tilt
     haml-rails (0.4)
       actionpack (>= 3.1, < 4.1)
@@ -79,6 +99,7 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.7.7)
+    kgio (2.8.0)
     launchy (2.2.0)
       addressable (~> 2.3)
     letter_opener (1.1.0)
@@ -90,10 +111,16 @@ GEM
     metaclass (0.0.1)
     method_source (0.8.1)
     mime-types (1.21)
+    mini_magick (3.5.0)
+      subexec (~> 0.2.1)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    multi_json (1.6.1)
-    nokogiri (1.5.6)
+    multi_json (1.7.2)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-ssh (2.6.6)
+    newrelic_rpm (3.6.0.78)
+    nokogiri (1.5.9)
     pg (0.14.1)
     polyglot (0.3.3)
     pry (0.9.12)
@@ -124,9 +151,13 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
-    rake (10.0.3)
+    raindrops (0.10.0)
+    rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (3.0.3)
+    redis-namespace (1.2.1)
+      redis (~> 3.0.0)
     rspec-core (2.13.0)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -138,8 +169,9 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
+    ruby-hmac (0.4.0)
     rubyzip (0.9.9)
-    sass (3.2.6)
+    sass (3.2.7)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -152,22 +184,34 @@ GEM
     shoulda-matchers (1.4.2)
       activesupport (>= 3.0.0)
       bourne (~> 1.1.2)
-    slop (3.4.3)
+    sidekiq (2.8.0)
+      celluloid (~> 0.12.0)
+      connection_pool (~> 1.0)
+      multi_json (~> 1)
+      redis (~> 3)
+      redis-namespace
+    slop (3.4.4)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.7)
-    thor (0.17.0)
-    tilt (1.3.4)
+    subexec (0.2.2)
+    thor (0.18.0)
+    tilt (1.3.6)
+    timers (1.1.0)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.36)
+    tzinfo (0.3.37)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicorn (4.6.2)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     websocket (1.0.7)
     xpath (1.0.0)
       nokogiri (~> 1.3)
@@ -181,19 +225,26 @@ DEPENDENCIES
   bootstrap_form
   capybara
   capybara-email
+  carrierwave
   coffee-rails (~> 3.2.1)
   fabrication
   faker
+  fog (~> 1.3.1)
   haml-rails
   jquery-rails
   launchy
   letter_opener
+  mini_magick
+  newrelic_rpm
   pg
   pry
   pry-nav
-  rails
-  rspec-rails
+  rails (= 3.2.12)
+  rspec-core (= 2.13.0)
+  rspec-rails (= 2.13.0)
   sass-rails (~> 3.2.3)
-  shoulda-matchers
+  shoulda-matchers (= 1.4.2)
+  sidekiq
   sqlite3
   uglifier (>= 1.0.3)
+  unicorn

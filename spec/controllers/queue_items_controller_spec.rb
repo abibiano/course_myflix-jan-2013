@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe QueueItemsController do
   context "user is authenticated" do
-    before { set_current_user }
+    before { set_current_user(Fabricate(:user)) }
     describe "GET #index" do
 
       it "sets the @queue_items variable" do

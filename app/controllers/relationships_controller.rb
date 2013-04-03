@@ -1,6 +1,4 @@
-class RelationshipsController < ApplicationController
-  before_filter :require_user
-
+class RelationshipsController < AuthenticatedController
   def create
     @user = User.find(params[:user_id])
     current_user.follow!(@user)

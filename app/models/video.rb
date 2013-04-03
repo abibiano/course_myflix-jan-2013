@@ -4,6 +4,9 @@ class Video < ActiveRecord::Base
   has_many :queue_items
   has_many :users, :through => :queue_items
 
+  mount_uploader :small_cover_url, SmallCoverUploader
+  mount_uploader :large_cover_url, LargeCoverUploader
+
 	validates :title, presence: true
 	validates :description, presence: true
 

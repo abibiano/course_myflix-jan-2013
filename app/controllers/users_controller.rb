@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     if @user.save
       invitation = Invitation.where(friend_email: @user.email).first
       handle_invitation(invitation) if invitation
-      AppMailer.welcome_email(@user).deliver
+      AppMailer.delay.welcome_email(@user)
       session[:user_id] = @user.id
       redirect_to home_path, notice: 'User was succesfully created'
     else

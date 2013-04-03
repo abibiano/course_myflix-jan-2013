@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe VideosController do
   context "user is authenticated" do
-    before { set_current_user }
+    before { set_current_user(Fabricate(:user)) }
     describe "GET #show" do
       let(:video) { video = Fabricate(:video) }
       it "sets the @video variable" do

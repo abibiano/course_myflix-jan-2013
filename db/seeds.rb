@@ -37,6 +37,7 @@ video_south_park = Video.create(title: 'South Park', \
 	small_cover_url: '/tmp/south_park.jpg', \
 	category: category_commedies)
 
+user_admin = User.create(email: "admin@example.com", password: "admin", full_name: "Admin User", admin: true)
 user_alex = User.create(email: "alex@bibiano.es", password: "1234", full_name: "Alex Bibiano")
 user_chris = User.create(email: "chris@example.com", password: "1234", full_name: "Chris")
 user_peter = User.create(email: "peter@example.com", password: "1234", full_name: "Peter")
@@ -51,8 +52,8 @@ all_users << user_alex << user_chris << user_peter
 user_alex.queue_items.create(video: video_south_park, position: 1)
 user_alex.queue_items.create(video: video_monk, position: 2)
 
-user_alex.relationships.create(followed_id: user_peter.id)
-user_alex.relationships.create(followed_id: user_chris.id)
+user_alex.follower_relationships.create(followed_id: user_peter.id)
+user_alex.follower_relationships.create(followed_id: user_chris.id)
 
-user_peter.relationships.create(followed_id: user_chris.id)
-user_peter.relationships.create(followed_id: user_alex.id)
+user_peter.follower_relationships.create(followed_id: user_chris.id)
+user_peter.follower_relationships.create(followed_id: user_alex.id)
