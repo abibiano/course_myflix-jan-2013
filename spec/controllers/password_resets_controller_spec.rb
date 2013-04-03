@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PasswordResetsController do
 
   describe "GET edit" do
-    it "redenrs the edit template if token exists" do
+    it "renders the edit template if token exists" do
       alice = Fabricate(:user, password: 'old_password', password_reset_token: 'abcd', password_reset_sent_at: Time.zone.now)
       get :edit, id: alice.password_reset_token
       response.should render_template :edit

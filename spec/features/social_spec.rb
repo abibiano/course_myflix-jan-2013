@@ -2,13 +2,17 @@ require 'spec_helper'
 
 feature 'user interacts with the queue' do
 
-  scenario 'following and unfollowing a user' do
-    alex = Fabricate(:user)
-    alice = Fabricate(:user)
-    commedies = Fabricate(:category)
-    monk = Fabricate(:video, title: 'Monk', description: "SF detective", category: commedies)
-    review_alice = Fabricate(:review, user: alice, video: monk)
+  given(:alex) { Fabricate(:user) }
+  given(:alice) { Fabricate(:user) }
+  given(:commedies) { Fabricate(:category) }
+  given(:monk) { Fabricate(:video, title: 'Monk', description: "SF detective", category: commedies) }
+  given(:family_guy) { Fabricate(:video, title: "Family Guy") }
 
+  background do
+    Fabricate(:review, user: alice, video: monk)
+  end
+
+  scenario 'following and unfollowing a user' do
     sign_in(alex)
     visit video_path(monk)
     click_link alice.full_name
