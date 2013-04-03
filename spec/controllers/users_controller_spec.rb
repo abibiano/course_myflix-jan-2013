@@ -33,25 +33,30 @@ describe UsersController do
     end
     describe "POST #create" do
       context "with valid input" do
+        before do
+          charge = double('charge')
+          charge.stub(:successful?).and_return(true)
+          StripeWrapper::Charge.stub(:create).and_return(charge)
+        end
         it "creates the user" do
           expect {
-            post :create, user: Fabricate.attributes_for(:user)
+            post :create, user: Fabricate.attributes_for(:user), token: "123"
           }.to change(User, :count).by(1)
         end
         it "redirects to home path" do
-          post :create, user: Fabricate.attributes_for(:user)
+          post :create, user: Fabricate.attributes_for(:user), token: "123"
           expect(response).to redirect_to home_path
         end
         it "create relationship if invitation exists" do
           alice = Fabricate(:user)
           invitation = Fabricate(:invitation, user: alice, friend_email: "bob@example.com", friend_full_name: "Bob")
-          post :create, user: Fabricate.attributes_for(:user, email: "bob@example.com", full_name: "Bob")
+          post :create, user: Fabricate.attributes_for(:user, email: "bob@example.com", full_name: "Bob"), token: "123"
           expect(User.last.following? alice).to be_true
           expect(alice.following? User.last).to be_true
         end
         it "does not create relationship if invitation dosent exists" do
           expect {
-            post :create, user: Fabricate.attributes_for(:user)
+            post :create, user: Fabricate.attributes_for(:user), token: "123"
           }.to_not change(Relationship, :count)
         end
       end
@@ -66,10 +71,19 @@ describe UsersController do
           post :create, user: Fabricate.attributes_for(:user, full_name: nil)
           expect(response).to render_template :new
         end
+        it "does not charge the user" do
+          post :create, user: Fabricate.attributes_for(:user, full_name: nil), token: "123"
+          StripeWrapper::Charge.should_not_receive(:create)
+        end
       end
 
       context "sends the welcome email" do
-        before { reset_email }
+        before do
+          reset_email
+          charge = double('charge')
+          charge.stub(:successful?).and_return(true)
+          StripeWrapper::Charge.stub(:create).and_return(charge)
+        end
         it "sends out the email" do
           post :create, user: Fabricate.attributes_for(:user)
           expect(ActionMailer::Base.deliveries).to_not be_empty
@@ -81,7 +95,7 @@ describe UsersController do
         end
         it "has the right content" do
           alice = Fabricate.attributes_for(:user, full_name: "Alice")
-          post :create, user: alice
+          post :create, user: alice, token: "123"
           message = ActionMailer::Base.deliveries.last
           expect(message.html_part.body).to include("Alice")
         end

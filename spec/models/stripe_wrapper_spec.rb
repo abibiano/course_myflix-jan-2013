@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe StripeGateway::Charge do
+describe StripeWrapper::Charge do
   before do
-    StripeGateway.set_api_key
+    StripeWrapper.set_api_key
   end
 
   let(:token) { Stripe::Token.create(
@@ -19,14 +19,14 @@ describe StripeGateway::Charge do
     let(:card_number) { "4242424242424242" }
 
     it "charges the card successfully" do
-      response = StripeGateway::Charge.create(amount: 300, card: token)
+      response = StripeWrapper::Charge.create(amount: 300, card: token)
       response.should be_successful
     end
   end
 
   context "with invalid credit card" do
     let(:card_number) { "4000000000000002" }
-    let(:response) { StripeGateway::Charge.create(amount: 300, card: token) }
+    let(:response) { StripeWrapper::Charge.create(amount: 300, card: token) }
 
     it "does not charge the card" do
       response.should_not be_successful
