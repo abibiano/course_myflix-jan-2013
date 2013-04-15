@@ -5,7 +5,8 @@ describe StripeWrapper::Charge do
     StripeWrapper.set_api_key
   end
 
-  let(:token) { Stripe::Token.create(
+  let(:token) do
+    Stripe::Token.create(
       card: {
         number: card_number,
         exp_month: 3,
@@ -13,7 +14,14 @@ describe StripeWrapper::Charge do
         cvc: 314
       }
     ).id
-  }
+  end
+
+  let(:card_number) { "4242424242424242" }
+
+  it "passes throug the call the stripe api" do
+      response = StripeWrapper::Charge.create(amount: 1000, card: token, description: "payinguser@example.com")
+      response.amount.should == 1000
+  end
 
   context "with valid credit card" do
     let(:card_number) { "4242424242424242" }
