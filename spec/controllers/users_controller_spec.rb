@@ -34,10 +34,6 @@ describe UsersController do
     describe "POST #create" do
       context "with valid user input" do
         context "with valid card info" do
-          before do
-            charge = double('charge', successful?: true)
-            StripeWrapper::Charge.stub(:create).and_return(charge)
-          end
           it "creates the user" do
             expect {
               post :create, user: Fabricate.attributes_for(:user), token: "123"
@@ -109,29 +105,6 @@ describe UsersController do
             StripeWrapper::Charge.should_not_receive(:create)
           end
 
-        end
-      end
-      context "sends the welcome email" do
-        before do
-          reset_email
-          charge = double('charge')
-          charge.stub(:successful?).and_return(true)
-          StripeWrapper::Charge.stub(:create).and_return(charge)
-        end
-        it "sends out the email" do
-          post :create, user: Fabricate.attributes_for(:user)
-          expect(ActionMailer::Base.deliveries).to_not be_empty
-        end
-        it "sends to the right recipient" do
-          alice = Fabricate.attributes_for(:user)
-          post :create, user: alice
-          expect(last_email.to).to eq [alice[:email]]
-        end
-        it "has the right content" do
-          alice = Fabricate.attributes_for(:user, full_name: "Alice")
-          post :create, user: alice, token: "123"
-          message = ActionMailer::Base.deliveries.last
-          expect(message.html_part.body).to include("Alice")
         end
       end
     end
