@@ -1,8 +1,8 @@
 namespace :deploy do
   desc 'Deploy to staging'
   task :staging do
-    reomte = "git@heroku.com:kkk.git"
-    app = "myflix"
+    remote = "git@heroku.com:myflix-staging.git"
+    app = "myflix-staging"
 
     system "heroku maintenance:on --app #{app}"
     system 'git checkout staging'
@@ -17,8 +17,8 @@ namespace :deploy do
 
   desc 'Deploy to production'
   task :production do
-    reomte = "git@heroku.com:kkk.git"
-    app = "myflix"
+    remote = "git@heroku.com:blooming-meadow-2769.git"
+    app = "blooming-meadow-2769"
 
     system "heroku maintenance:on --app #{app}"
     system 'git checkout production'
