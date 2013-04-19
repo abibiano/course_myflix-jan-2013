@@ -34,6 +34,10 @@ describe UsersController do
     describe "POST #create" do
       context "with valid user input" do
         context "with valid card info" do
+          before do
+            charge = double('charge', successful?: true)
+            StripeWrapper::Charge.stub(:create).and_return(charge)
+          end
           it "creates the user" do
             expect {
               post :create, user: Fabricate.attributes_for(:user), token: "123"

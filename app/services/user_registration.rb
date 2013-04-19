@@ -1,30 +1,30 @@
 class UserRegistration
-  attr_accessor :user, :token
+  attr_accessor :user
 
-  def initialize(user, token)
+  def initialize(user)
     @user = user
-    @token = token
   end
 
-  def register_user
-    if @user.valid?
+  def register_user(stripe_token)
+    if user.valid?
       charge = StripeWrapper::Charge.create(
         :amount => 999,
-        :card => token,
+        :card => stripe_token,
         :description => user.email)
       if charge.successful?
-        if @user.save
+        if user.save
           AppMailer.delay.welcome_email(user)
           invitation = Invitation.where(friend_email: user.email).first
           handle_invitation(invitation) if invitation
+          UserRegistrationResult.new(true, false, nil)
         else
-          "Error on saving user"
+          UserRegistrationResult.new(false, true, nil)
         end
       else
-        charge.error_message
+        UserRegistrationResult.new(false, false, charge.error_message)
       end
     else
-      "Invalid user"
+      UserRegistrationResult.new(false, true, nil)
     end
   end
 
@@ -34,5 +34,15 @@ class UserRegistration
     user.follow! invitation.user
     invitation.user.follow! user
     invitation.update_attribute(:token, nil)
+  end
+
+  class UserRegistrationResult < Struct.new(:successful, :invalid_user, :stripe_error_message)
+    def invalid_user?
+      self[:invalid_user]
+    end
+
+    def successful?
+      self[:successful]
+    end
   end
 end

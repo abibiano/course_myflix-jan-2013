@@ -12,18 +12,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    token = params[:stripeToken]
-    error_message = UserRegistration.new(@user, token).register_user
-    if error_message
-      flash[:error] = error_message
-      render :new
-    else
-      flash[:success] = "Thank you for your payment."
-      session[:user_id] = @user.id
-      redirect_to home_path, notice: 'User was succesfully created'
-    end
+    stripe_token = params[:stripeToken]
+    result = UserRegistration.new(@user).register_user(stripe_token)
+    handle_registration_result(result)
   end
-
 
   def show
     @user = User.find(params[:id])
@@ -33,6 +25,20 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  private
+
+  def handle_registration_result(result)
+    if result.invalid_user?
+      render :new
+    elsif result.successful?
+      flash[:success] = "Thank you for your payment."
+      session[:user_id] = @user.id
+      redirect_to home_path, notice: 'User was succesfully created'
+    else
+      flash[:error] = result.stripe_error_message
+      render :new
+    end
+  end
 
 
 end
