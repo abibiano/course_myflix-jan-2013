@@ -6,8 +6,8 @@ describe UserRegistration do
     let(:token) { "123" }
     context "with valid card info" do
       before do
-        charge = double('charge', successful?: true)
-        StripeWrapper::Charge.stub(:create).and_return(charge)
+        customer = double('customer', successful?: true, customer_id: '123')
+        StripeWrapper::Customer.stub(:create).and_return(customer)
       end
       it "creates the user" do
         expect {
@@ -26,6 +26,7 @@ describe UserRegistration do
           UserRegistration.new(user).register_user(token)
         }.to_not change(Relationship, :count)
       end
+
       context "sends welcome email" do
         before do
           reset_email
@@ -47,8 +48,8 @@ describe UserRegistration do
     end
     context "with invalid card info" do
       before do
-        charge = double('charge', successful?: false, error_message: "Your card was declined")
-        StripeWrapper::Charge.stub(:create).and_return(charge)
+        customer = double('customer', successful?: false, error_message: "Your card was declined")
+        StripeWrapper::Customer.stub(:create).and_return(customer)
       end
       it "does not create the user" do
         expect {
@@ -68,7 +69,7 @@ describe UserRegistration do
     context "with valid card info" do
       before do
         charge = double('charge', successful?: true)
-        StripeWrapper::Charge.stub(:create).and_return(charge)
+        StripeWrapper::Customer.stub(:create).and_return(charge)
       end
       it "does not create a user" do
         expect {
@@ -77,7 +78,7 @@ describe UserRegistration do
       end
       it "does not charge the user" do
         UserRegistration.new(user).register_user(token)
-        StripeWrapper::Charge.should_not_receive(:create)
+        StripeWrapper::Customer.should_not_receive(:create)
       end
       it "does not send the welcome email" do
         reset_email

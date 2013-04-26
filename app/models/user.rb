@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_secure_password
+  after_initialize :default_values
 
   validates :email, presence: true
   validates :full_name, presence: true
@@ -9,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :reviews
   has_many :videos, through: :queue_items
   has_many :queue_items, order: "position ASC"
+  has_many :payments
 
   has_many :followed_relationships, foreign_key: "follower_id",
                                     class_name: "Relationship",
@@ -41,6 +43,12 @@ class User < ActiveRecord::Base
     self.password_reset_sent_at = Time.zone.now
     save!
     AppMailer.delay.password_reset(self)
+  end
+
+  private
+
+  def default_values
+    self.active = true if self.active.nil?
   end
 
 end

@@ -7,11 +7,11 @@ class UserRegistration
 
   def register_user(stripe_token)
     if user.valid?
-      charge = StripeWrapper::Charge.create(
-        :amount => 999,
+      response = StripeWrapper::Customer.create(
         :card => stripe_token,
-        :description => user.email)
-      if charge.successful?
+        :email => user.email)
+      if response.successful?
+        user.stripe_id = response.customer_id
         if user.save
           AppMailer.delay.welcome_email(user)
           invitation = Invitation.where(friend_email: user.email).first
@@ -21,7 +21,7 @@ class UserRegistration
           UserRegistrationResult.new(false, true, nil)
         end
       else
-        UserRegistrationResult.new(false, false, charge.error_message)
+        UserRegistrationResult.new(false, false, response.error_message)
       end
     else
       UserRegistrationResult.new(false, true, nil)

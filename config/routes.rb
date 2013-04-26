@@ -1,4 +1,5 @@
 Myflix::Application.routes.draw do
+  mount StripeEvent::Engine => '/stripe'
   root to: 'static_pages#home'
 
   get 'ui(/:action)', controller: 'ui'
@@ -8,6 +9,8 @@ Myflix::Application.routes.draw do
   get 'register(/:id)', to: 'users#new', as: 'register'
   get 'people', to: 'users#people', as: 'people'
   resources :users, only: [:create, :show]
+  get 'plan_and_billing', to: 'plans#index', as: 'plan_and_billing'
+  resources :plans, only: [:destroy]
 
   get 'sign_in', to: 'sessions#new', as: 'sign_in'
   post 'sign_in', to: 'sessions#create'
@@ -38,6 +41,7 @@ Myflix::Application.routes.draw do
 
   namespace :admin do
     resources :videos, only: [:new, :create]
+    resources :payments, only: [:index]
   end
 end
 

@@ -35,8 +35,8 @@ describe UsersController do
       context "with valid user input" do
         context "with valid card info" do
           before do
-            charge = double('charge', successful?: true)
-            StripeWrapper::Charge.stub(:create).and_return(charge)
+            customer = double('customer', successful?: true, customer_id: '123')
+            StripeWrapper::Customer.stub(:create).and_return(customer)
           end
           it "creates the user" do
             expect {
@@ -68,8 +68,8 @@ describe UsersController do
 
         context "with invalid card info" do
           before do
-            charge = double('charge', successful?: false, error_message: "Your card was declined")
-            StripeWrapper::Charge.stub(:create).and_return(charge)
+            customer = double('customer', successful?: false, error_message: "Your card was declined")
+            StripeWrapper::Customer.stub(:create).and_return(customer)
           end
 
           it "does not create the user" do
@@ -92,8 +92,8 @@ describe UsersController do
       context "with invalid user inputs" do
         context "with valid credit card info" do
           before do
-            charge = double('charge', successful?: true)
-            StripeWrapper::Charge.stub(:create).and_return(charge)
+            customer = double('customer', successful?: true, customer_id: '123')
+            StripeWrapper::Customer.stub(:create).and_return(customer)
           end
           it "does not create a user" do
             expect {

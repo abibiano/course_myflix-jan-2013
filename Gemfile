@@ -14,6 +14,7 @@ gem 'carrierwave'
 gem "mini_magick"
 gem "fog", "~> 1.3.1"
 gem 'stripe'
+gem "stripe_event"
 gem 'draper', '~> 1.0'
 
 group :assets do

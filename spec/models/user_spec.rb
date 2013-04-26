@@ -6,6 +6,7 @@ describe User do
   it { should validate_presence_of(:password) }
   it { should validate_uniqueness_of(:email) }
   it { should have_many(:reviews) }
+  it { should have_many(:payments) }
   it { should have_many(:queue_items) }
   it { should have_many(:videos).through(:queue_items) }
 
