@@ -18,21 +18,20 @@ gem "stripe_event"
 gem 'draper', '~> 1.0'
 
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
 end
 
 group :test, :development do
   gem 'sqlite3'
-  gem 'rspec-core', '2.13.0'
-  gem "rspec-rails", '2.13.0'
+  gem "rspec-rails"
   gem 'pry'
   gem 'pry-nav'
 end
 
 group :test do
-  gem "shoulda-matchers", "1.4.2"
+  gem "shoulda-matchers"
   gem 'capybara'
   gem 'capybara-email'
   gem "launchy"
